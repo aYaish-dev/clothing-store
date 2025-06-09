@@ -1,0 +1,45 @@
+<?php
+session_start();
+include 'db.php';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $id = (int) $_POST['product_id'];
+    $size = mysqli_real_escape_string($conn, $_POST['size']);
+    $qty = max(1, (int) $_POST['quantity']); // والـ quantity رح توصل كـ hidden = 1
+
+
+    // 1. Get product info
+    $product_result = mysqli_query($conn, "SELECT * FROM products WHERE id = $id");
+    $product = mysqli_fetch_assoc($product_result);
+
+    if (!$product) {
+        $_SESSION['message'] = "❌ Product not found.";
+        header("Location: cart.php");
+        exit();
+    }
+
+    // 2. Get stock for selected size
+    $stock_result = mysqli_query($conn, "SELECT quantity FROM product_sizes WHERE product_id = $id AND size = '$size'");
+    $stock_row = mysqli_fetch_assoc($stock_result);
+    $stock = $stock_row['quantity'] ?? 0;
+
+    // 3. Unique cart key = product + size
+    $key = $id . "_" . $size;
+    $currentQty = $_SESSION['cart'][$key]['quantity'] ?? 0;
+
+    if ($stock === 0) {
+        $_SESSION['message'] = "❌ Size $size is out of stock.";
+    } elseif ($currentQty + $qty > $stock) {
+        $_SESSION['message'] = "❌ Only $stock item(s) in stock for size $size.";
+    } else {
+        $_SESSION['cart'][$key] = [
+            'product' => $product,
+            'size' => $size,
+            'quantity' => $currentQty + $qty
+        ];
+        $_SESSION['message'] = "✅ Added to cart ($size)!";
+    }
+}
+
+header("Location: cart.php");
+exit();

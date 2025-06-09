@@ -36,3 +36,16 @@ It supports both frontend and admin functionalities, along with size-based inven
 1. Clone the repository:
    ```bash
    git clone https://github.com/your-username/clothing-store.git
+   ```
+
+2. Create the MySQL database and import the schema:
+   - Create a database named `clothing_store`.
+   - Import `clothing_store.sql` using phpMyAdmin or the command line:
+     ```bash
+     mysql -u root -p clothing_store < clothing_store.sql
+     ```
+
+3. Configure PHP:
+   - Update `db.php` with your MySQL credentials if they differ from the defaults.
+   - Ensure the `mysqli` extension is enabled in `php.ini`.
+   - Verify `file_uploads` is `On` and adjust `upload_max_filesize` if needed for product images.

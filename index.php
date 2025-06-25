@@ -44,7 +44,7 @@ if (isset($_GET['category'])) {
 
 <!-- FILTER BUTTONS -->
 <div class="container-fluid my-3">
-  <div class="d-flex overflow-auto gap-2 px-3">
+  <div class="d-flex justify-content-center overflow-auto gap-2 px-3">
     <a href="index.php" class="btn btn-outline-secondary flex-shrink-0 category-btn">All</a>
     <a href="index.php?category=Men" class="btn btn-outline-dark flex-shrink-0 category-btn">👔 Men</a>
     <a href="index.php?category=Women" class="btn btn-outline-danger flex-shrink-0 category-btn">👗 Women</a>

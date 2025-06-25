@@ -15,7 +15,7 @@ require_once 'session.php';
 </div>
 
 <div class="container-fluid my-4">
-  <div class="d-flex overflow-auto gap-2 px-3">
+  <div class="d-flex justify-content-center overflow-auto gap-2 px-3">
     <a href="products.php" class="btn category-btn flex-shrink-0">All</a>
     <a href="products.php?category=Men" class="btn category-btn flex-shrink-0">👔 Men</a>
     <a href="products.php?category=Women" class="btn category-btn flex-shrink-0">👗 Women</a>

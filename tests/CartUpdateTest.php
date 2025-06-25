@@ -46,4 +46,11 @@ class CartUpdateTest extends TestCase
         $this->assertFalse($result['success']);
         $this->assertSame(1, $_SESSION['cart']['item1']['quantity']);
     }
+
+    public function testUpdateQuantityInvalidCsrf(): void
+    {
+        $result = Cart::updateQuantity($this->pdo, 'item1', 2, 'wrong');
+        $this->assertFalse($result['success']);
+        $this->assertSame(1, $_SESSION['cart']['item1']['quantity']);
+    }
 }

@@ -48,7 +48,11 @@ $result = mysqli_query($conn, $query);
                         <td><span class="badge bg-secondary"><?php echo htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                         <td>
                             <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">✏️ Edit</a>
-                            <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?')">🗑️ Delete</a>
+                            <form action="delete.php" method="post" class="d-inline" onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                <input type="hidden" name="id" value="<?php echo $row['id']; ?>">
+                                <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
+                                <button type="submit" class="btn btn-danger btn-sm">🗑️ Delete</button>
+                            </form>
                         </td>
                     </tr>
                 <?php } ?>

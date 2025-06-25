@@ -38,12 +38,7 @@ class Checkout
         }
         $pdo->commit();
         $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-        $mailer = new PHPMailer();
-        $mailer->setFrom('no-reply@localhost');
-        $mailer->addAddress($adminEmail);
-        $mailer->Subject = 'New Order';
-        $mailer->Body = "New order #$orderId placed by $fullname. Total: $$total";
-        @$mailer->send();
+
         return $orderId;
     }
 }

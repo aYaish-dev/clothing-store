@@ -115,14 +115,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_commit($conn);
 
-     $message = "New order #$order_id placed by $fullname. Total: $$total";
+    $message = "New order #$order_id placed by $fullname. Total: $$total";
     $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-    $mailer = new PHPMailer();
-    $mailer->setFrom('no-reply@localhost');
-    $mailer->addAddress($adminEmail);
-    $mailer->Subject = 'New Order';
-    $mailer->Body = $message;
-    @$mailer->send();
+
 
     unset($_SESSION['cart']);
     $_SESSION['message'] = "✅ Order placed successfully!";

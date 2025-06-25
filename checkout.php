@@ -41,7 +41,7 @@ if (empty($cart)) {
                     $total += $subtotal;
                 ?>
                 <tr>
-                    <td><img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" width="70" class="img-thumbnail"></td>
+                    <td><img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" width="70" class="img-thumbnail"></td>
                     <td><?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($size, ENT_QUOTES, 'UTF-8'); ?></td>
                     <td>$<?php echo $product['price']; ?></td>

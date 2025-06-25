@@ -169,7 +169,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="mb-3">
                 <label class="form-label">Current Image:</label><br>
-                <img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" width="100" class="img-thumbnail mb-2"><br>
+                <img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" width="100" class="img-thumbnail mb-2"><br>
                 <label class="form-label">Change Image (optional):</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
             </div>

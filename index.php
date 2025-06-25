@@ -64,7 +64,7 @@ if (isset($_GET['category'])) {
 
         echo "<div class='col-md-4 mb-4'>";
         echo "<div class='card h-100 shadow-sm'>";
-        echo "<img src='uploads/$image' class='card-img-top' style='height: 320px; object-fit: cover;'>";
+        echo "<img src='uploads/$image' alt='$name' class='card-img-top' style='height: 320px; object-fit: cover;'>";
         echo "<div class='card-body d-flex flex-column'>";
         echo "<h5 class='card-title'>$name</h5>";
         echo "<p class='card-text text-muted'>\$ " . htmlspecialchars($price, ENT_QUOTES, 'UTF-8') . "</p>";

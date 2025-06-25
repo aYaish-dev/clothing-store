@@ -39,7 +39,7 @@ $total = 0;
           <div class="card mb-3 shadow-sm cart-item" data-key="<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>" data-stock="<?= htmlspecialchars($maxStock, ENT_QUOTES, 'UTF-8') ?>">
             <div class="row g-0 align-items-center">
               <div class="col-md-3 text-center">
-                <img src="uploads/<?= htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8') ?>" class="img-fluid rounded-start" style="height: 150px; object-fit: contain;">
+                <img src="uploads/<?= htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8') ?>" alt="<?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?>" class="img-fluid rounded-start" style="height: 150px; object-fit: contain;">
               </div>
               <div class="col-md-6">
                 <div class="card-body">

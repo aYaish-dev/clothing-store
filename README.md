@@ -65,3 +65,13 @@ It supports both frontend and admin functionalities, along with size-based inven
    Then open `http://localhost:8000/index.php` in your browser.
 
 The main stylesheet is located at `assets/css/style.css` if you wish to tweak the look and feel.
+
+## 🧪 Running Tests
+
+This project uses PHPUnit for unit tests.
+Install Composer dependencies and run the suite with:
+
+```bash
+composer install
+./vendor/bin/phpunit
+```

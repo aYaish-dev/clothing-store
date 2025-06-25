@@ -80,7 +80,7 @@ if (isset($_GET['category'])) {
         foreach ($sizes as $sz) {
             $qty = $stock_data[$sz] ?? 0;
             $disabled = $qty == 0 ? 'disabled' : '';
-            $class = $qty == 0 ? 'btn-outline-secondary text-decoration-line-through' : 'btn-outline-dark';
+            $class = $qty == 0 ? 'btn-outline-secondary' : 'btn-outline-dark';
             echo "<button type='button' class='btn $class size-btn' 
                     data-product='$id' data-size='$sz' $disabled>$sz</button>";
         }

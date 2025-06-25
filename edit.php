@@ -25,7 +25,70 @@ $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
+    $price = (float)$_POST['price'];
+    $description = trim($_POST['description']);
+    $category_id = (int)$_POST['category_id'];
+    $stock_xs = (int)($_POST['stock_xs'] ?? 0);
+    $stock_s = (int)($_POST['stock_s'] ?? 0);
+    $stock_m = (int)($_POST['stock_m'] ?? 0);
+    $stock_l = (int)($_POST['stock_l'] ?? 0);
+    $stock_xl = (int)($_POST['stock_xl'] ?? 0);
+    $stock_xxl = (int)($_POST['stock_xxl'] ?? 0);
 
+    // Keep current image by default
+    $imageName = $product['image'];
+
+    // Handle optional new image upload
+    if (!empty($_FILES['image']['name'])) {
+        $allowedExts  = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+        $maxSize      = 2 * 1024 * 1024; // 2MB
+
+        $imageFile = $_FILES['image'];
+        $ext  = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
+        $mime = mime_content_type($imageFile['tmp_name']);
+
+        if ($imageFile['size'] > $maxSize) {
+            $error = "❌ Image exceeds size limit.";
+        } elseif (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
+            $error = "❌ Invalid image type.";
+        } else {
+            $newName = uniqid('img_', true) . '.' . $ext;
+            if (move_uploaded_file($imageFile['tmp_name'], 'uploads/' . $newName)) {
+                $imageName = $newName;
+            } else {
+                $error = "❌ Image upload failed.";
+            }
+        }
+    }
+
+    if (!$error) {
+        $update = mysqli_prepare($conn, "UPDATE products SET name=?, price=?, description=?, category_id=?, image=?, stock_xs=?, stock_s=?, stock_m=?, stock_l=?, stock_xl=?, stock_xxl=? WHERE id=?");
+        mysqli_stmt_bind_param($update, "sdsdsiiiiiii", $name, $price, $description, $category_id, $imageName, $stock_xs, $stock_s, $stock_m, $stock_l, $stock_xl, $stock_xxl, $id);
+        if (mysqli_stmt_execute($update)) {
+            $sizes = ['XS' => $stock_xs, 'S' => $stock_s, 'M' => $stock_m, 'L' => $stock_l, 'XL' => $stock_xl, 'XXL' => $stock_xxl];
+            foreach ($sizes as $sz => $qty) {
+                $size_stmt = mysqli_prepare($conn, "UPDATE product_sizes SET quantity=? WHERE product_id=? AND size=?");
+                mysqli_stmt_bind_param($size_stmt, "iis", $qty, $id, $sz);
+                mysqli_stmt_execute($size_stmt);
+            }
+
+            $success = "✅ Product updated successfully.";
+            // Refresh product info for the form
+            $product['name'] = $name;
+            $product['price'] = $price;
+            $product['description'] = $description;
+            $product['category_id'] = $category_id;
+            $product['image'] = $imageName;
+            $product['stock_xs'] = $stock_xs;
+            $product['stock_s'] = $stock_s;
+            $product['stock_m'] = $stock_m;
+            $product['stock_l'] = $stock_l;
+            $product['stock_xl'] = $stock_xl;
+            $product['stock_xxl'] = $stock_xxl;
+        } else {
+            $error = "❌ Error updating product.";
+        }
     }
 }
 ?>

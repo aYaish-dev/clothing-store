@@ -1,11 +1,12 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
+
     $password = $_POST['password'];
 
     $query = "SELECT * FROM users WHERE username='$username' AND role='admin'";
@@ -40,6 +41,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <form method="POST">
+            <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
             <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
             <button type="submit" class="btn btn-dark w-100">Login</button>

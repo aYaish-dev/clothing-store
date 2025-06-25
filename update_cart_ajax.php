@@ -1,9 +1,15 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
-if (!isset($_POST['key'], $_POST['quantity'])) {
+if (!isset($_POST['key'], $_POST['quantity'], $_POST['token'])) {
     echo json_encode(['success' => false, 'message' => 'Invalid request']);
+    exit;
+}
+
+if (!verify_csrf_token($_POST['token'])) {
+    echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
     exit;
 }
 

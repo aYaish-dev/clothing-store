@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 // Admin Protection
 if (!isset($_SESSION['admin'])) {
@@ -22,7 +23,7 @@ $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
+
     $price = $_POST['price'];
     $description = trim($_POST['description']);
     $category_id = $_POST['category_id'];
@@ -60,6 +61,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="card p-4 shadow mx-auto" style="max-width: 600px;">
         <form action="edit.php?id=<?php echo $id; ?>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <div class="mb-3">
                 <label class="form-label">Product Name:</label>
                 <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" required>

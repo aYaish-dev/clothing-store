@@ -1,9 +1,11 @@
 <?php
+session_start();
 include 'db.php';
+include 'csrf.php';
 $success = $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
+
     $password = $_POST['password'];
 
     if ($username === '' || strlen($username) > 50) {
@@ -41,6 +43,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <form method="POST">
+            <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
             <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
             <button type="submit" class="btn btn-success w-100">Register</button>

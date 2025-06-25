@@ -1,6 +1,6 @@
 :root {
-  --primary-color: #2c3e50;
-  --secondary-color: #18bc9c;
+  --primary-color: #005662;
+  --secondary-color: #f26b3a;
   --light-color: #ffffff;
 }
 
@@ -13,7 +13,7 @@ body {
 }
 
 .navbar {
-  background: linear-gradient(to right, var(--primary-color), #34495e);
+  background: linear-gradient(to right, var(--primary-color), #007c8a);
 }
 
 .navbar-brand {
@@ -30,7 +30,7 @@ body {
 }
 
 .hero {
-  background: linear-gradient(to bottom right, var(--primary-color), #4a6070);
+  background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color));
   color: var(--light-color);
   padding: 4rem 0;
 }
@@ -65,6 +65,8 @@ body {
 .category-btn {
   border-radius: 20px;
   margin-right: 10px;
+  border-color: var(--secondary-color);
+  color: var(--secondary-color);
 }
 
 footer {

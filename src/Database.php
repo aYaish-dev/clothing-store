@@ -11,7 +11,8 @@ class Database
         $pdo->exec("CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            price REAL
+            price REAL,
+            discount REAL DEFAULT 0
         );");
 
         $pdo->exec("CREATE TABLE IF NOT EXISTS product_sizes (
@@ -41,10 +42,10 @@ class Database
         );");
     }
 
-    public static function addProduct(PDO $pdo, string $name, float $price): int
+    public static function addProduct(PDO $pdo, string $name, float $price, float $discount = 0.0): int
     {
-        $stmt = $pdo->prepare("INSERT INTO products (name, price) VALUES (?, ?)");
-        $stmt->execute([$name, $price]);
+        $stmt = $pdo->prepare("INSERT INTO products (name, price, discount) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $price, $discount]);
         return (int)$pdo->lastInsertId();
     }
 
@@ -66,5 +67,19 @@ class Database
     {
         $stmt = $pdo->prepare("UPDATE product_sizes SET quantity = quantity - ? WHERE product_id = ? AND size = ?");
         $stmt->execute([$qty, $productId, $size]);
+    }
+
+    public static function setDiscount(PDO $pdo, int $productId, float $percent): void
+    {
+        $percent = max(0.0, min(100.0, $percent));
+        $stmt = $pdo->prepare("UPDATE products SET discount = ? WHERE id = ?");
+        $stmt->execute([$percent, $productId]);
+    }
+
+    public static function getDiscount(PDO $pdo, int $productId): float
+    {
+        $stmt = $pdo->prepare("SELECT discount FROM products WHERE id = ?");
+        $stmt->execute([$productId]);
+        return (float)($stmt->fetchColumn() ?? 0);
     }
 }

@@ -24,7 +24,12 @@ $total = 0;
               $product = $item['product'];
               $qty = $item['quantity'];
               $size = $item['size'];
-              $subtotal = $product['price'] * $qty;
+              $price = $product['price'];
+              $discount = $product['discount'] ?? 0;
+              if ($discount > 0) {
+                  $price -= $price * ($discount / 100);
+              }
+              $subtotal = $price * $qty;
               $total += $subtotal;
 
               // Get max stock for the selected product and size
@@ -45,7 +50,11 @@ $total = 0;
                 <div class="card-body">
                   <h5 class="card-title mb-1"><?= htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8') ?></h5>
                   <p class="mb-1 text-muted">Size: <?= htmlspecialchars($size, ENT_QUOTES, 'UTF-8') ?></p>
-                  <p class="mb-0 fw-bold text-danger">$<?= number_format($product['price'], 2) ?></p>
+<?php if ($discount > 0): ?>
+                  <p class="mb-0 fw-bold text-danger"><span class="text-muted text-decoration-line-through">$<?= number_format($product['price'], 2) ?></span> $<?= number_format($price, 2) ?></p>
+<?php else: ?>
+                  <p class="mb-0 fw-bold text-danger">$<?= number_format($price, 2) ?></p>
+<?php endif; ?>
                 </div>
               </div>
               <div class="col-md-3 text-center">

@@ -62,6 +62,8 @@ if (isset($_GET['category'])) {
         $id = $row['id'];
         $name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
         $price = $row['price'];
+        $discount = (float)($row['discount'] ?? 0);
+        $finalPrice = $discount > 0 ? $price - ($price * ($discount / 100)) : $price;
         $image = htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8');
 
         // Fetch stock per size
@@ -77,7 +79,11 @@ if (isset($_GET['category'])) {
         echo "<img src='uploads/$image' alt='$name' class='card-img-top product-img'>";
         echo "<div class='card-body d-flex flex-column'>";
         echo "<h5 class='card-title'>$name</h5>";
-        echo "<p class='card-text text-muted'>\$ " . htmlspecialchars($price, ENT_QUOTES, 'UTF-8') . "</p>";
+        if ($discount > 0) {
+            echo "<p class='card-text'><span class='text-muted text-decoration-line-through'>\$" . htmlspecialchars($price, ENT_QUOTES, 'UTF-8') . "</span> <span class='text-danger'>\$" . number_format($finalPrice, 2) . "</span></p>";
+        } else {
+            echo "<p class='card-text text-muted'>\$ " . htmlspecialchars($price, ENT_QUOTES, 'UTF-8') . "</p>";
+        }
 
         echo "<form action='add_to_cart.php' method='POST'>";
         echo "<input type='hidden' name='csrf_token' value='" . $_SESSION['csrf_token'] . "'>";

@@ -29,6 +29,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $name = trim($_POST['name']);
         $price = (float)$_POST['price'];
+        $discount = isset($_POST['discount']) ? (float)$_POST['discount'] : 0.0;
         $description = trim($_POST['description']);
         $category_id = (int)$_POST['category_id'];
     $stock_xs = (int)($_POST['stock_xs'] ?? 0);
@@ -66,8 +67,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     if (!$error) {
-        $update = mysqli_prepare($conn, "UPDATE products SET name=?, price=?, description=?, category_id=?, image=?, stock_xs=?, stock_s=?, stock_m=?, stock_l=?, stock_xl=?, stock_xxl=? WHERE id=?");
-        mysqli_stmt_bind_param($update, "sdsdsiiiiiii", $name, $price, $description, $category_id, $imageName, $stock_xs, $stock_s, $stock_m, $stock_l, $stock_xl, $stock_xxl, $id);
+        $update = mysqli_prepare($conn, "UPDATE products SET name=?, price=?, discount=?, description=?, category_id=?, image=?, stock_xs=?, stock_s=?, stock_m=?, stock_l=?, stock_xl=?, stock_xxl=? WHERE id=?");
+        mysqli_stmt_bind_param($update, "sddsdsiiiiiii", $name, $price, $discount, $description, $category_id, $imageName, $stock_xs, $stock_s, $stock_m, $stock_l, $stock_xl, $stock_xxl, $id);
         if (mysqli_stmt_execute($update)) {
             $sizes = ['XS' => $stock_xs, 'S' => $stock_s, 'M' => $stock_m, 'L' => $stock_l, 'XL' => $stock_xl, 'XXL' => $stock_xxl];
             foreach ($sizes as $sz => $qty) {
@@ -80,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             // Refresh product info for the form
             $product['name'] = $name;
             $product['price'] = $price;
+            $product['discount'] = $discount;
             $product['description'] = $description;
             $product['category_id'] = $category_id;
             $product['image'] = $imageName;
@@ -122,6 +124,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Price ($):</label>
                 <input type="number" name="price" step="0.01" class="form-control" value="<?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?>" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Discount % (optional):</label>
+                <input type="number" name="discount" step="0.01" class="form-control" min="0" max="100" value="<?php echo htmlspecialchars($product['discount'], ENT_QUOTES, 'UTF-8'); ?>">
             </div>
 
             <div class="mb-3">

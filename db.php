@@ -19,4 +19,10 @@ if ($check && mysqli_num_rows($check) === 0) {
         "ALTER TABLE orders ADD `status` enum('pending','preparing','completed') NOT NULL DEFAULT 'pending' AFTER total"
     );
 }
+
+// Add discount column to products if missing
+$check = mysqli_query($conn, "SHOW COLUMNS FROM products LIKE 'discount'");
+if ($check && mysqli_num_rows($check) === 0) {
+    mysqli_query($conn, "ALTER TABLE products ADD discount FLOAT DEFAULT 0 AFTER price");
+}
 ?>

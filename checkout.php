@@ -38,18 +38,30 @@ if (empty($cart)) {
             <tbody>
                 <?php 
                 $total = 0;
-                foreach ($cart as $item): 
+                foreach ($cart as $item):
                     $product = $item['product'];
                     $qty = $item['quantity'];
                     $size = $item['size'];
-                    $subtotal = $product['price'] * $qty;
+                    $price = $product['price'];
+                    $discount = $product['discount'] ?? 0;
+                    if ($discount > 0) {
+                        $price -= $price * ($discount / 100);
+                    }
+                    $subtotal = $price * $qty;
                     $total += $subtotal;
                 ?>
                 <tr>
                     <td><img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" width="70" class="img-thumbnail"></td>
                     <td><?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?></td>
                     <td><?php echo htmlspecialchars($size, ENT_QUOTES, 'UTF-8'); ?></td>
-                    <td>$<?php echo $product['price']; ?></td>
+                    <td>
+                        <?php if ($discount > 0): ?>
+                            <span class="text-decoration-line-through text-muted">$<?php echo number_format($product['price'], 2); ?></span>
+                            $<?php echo number_format($price, 2); ?>
+                        <?php else: ?>
+                            $<?php echo number_format($price, 2); ?>
+                        <?php endif; ?>
+                    </td>
                     <td><?php echo $qty; ?></td>
                     <td>$<?php echo number_format($subtotal, 2); ?></td>
                 </tr>

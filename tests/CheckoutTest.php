@@ -42,7 +42,7 @@ class CheckoutTest extends TestCase
         Checkout::placeOrder($this->pdo, 1, 'John Doe', '123', 'Street 1', $cart);
     }
 
-    public function testPlaceOrderWithDiscount(): void
+    public function testPlaceOrderWithCouponDiscount(): void
     {
         $cart = [
             ['id' => $this->pid, 'size' => 'L', 'qty' => 2, 'price' => 30.0]
@@ -50,5 +50,16 @@ class CheckoutTest extends TestCase
         $orderId = Checkout::placeOrder($this->pdo, 1, 'Jane', '555', 'Street 2', $cart, 10.0);
         $total = $this->pdo->query("SELECT total FROM orders WHERE id = $orderId")->fetchColumn();
         $this->assertSame(54.0, (float)$total);
+    }
+
+    public function testPlaceOrderWithItemDiscount(): void
+    {
+        Database::setDiscount($this->pdo, $this->pid, 20.0);
+        $cart = [
+            ['id' => $this->pid, 'size' => 'L', 'qty' => 2, 'price' => 30.0, 'discount' => 20.0]
+        ];
+        $orderId = Checkout::placeOrder($this->pdo, 1, 'Jane', '555', 'Street 2', $cart);
+        $total = $this->pdo->query("SELECT total FROM orders WHERE id = $orderId")->fetchColumn();
+        $this->assertSame(48.0, (float)$total);
     }
 }

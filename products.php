@@ -52,13 +52,19 @@ require_once 'session.php';
         $pname = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
         $pimage = htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8');
         $pprice = htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8');
+        $pdiscount = (float)($row['discount'] ?? 0);
+        $pfinal = $pdiscount > 0 ? $row['price'] - ($row['price'] * ($pdiscount / 100)) : $row['price'];
 
         echo "<div class='col-lg-3 col-md-4 col-sm-6 mb-4'>";
         echo "<div class='card product-card border-0 h-100'>";
         echo "<img src='uploads/{$pimage}' alt='{$pname}' class='card-img-top product-img'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-success fw-bold'>{$pname}</h5>";
-        echo "<p class='card-text'>\$ {$pprice}</p>";
+        if ($pdiscount > 0) {
+            echo "<p class='card-text'><span class='text-muted text-decoration-line-through'>\$ {$pprice}</span> <span class='text-danger'>\$" . number_format($pfinal, 2) . "</span></p>";
+        } else {
+            echo "<p class='card-text'>\$ {$pprice}</p>";
+        }
 
         // Get stock per size
         $stock_sql = "SELECT size, quantity FROM product_sizes WHERE product_id = $id";

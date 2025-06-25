@@ -46,10 +46,20 @@ if ($newQty > $stock) {
 $_SESSION['cart'][$key]['quantity'] = $newQty;
 
 // حساب الـ subtotal و total
-$subtotal = $item['product']['price'] * $newQty;
+$price = $item['product']['price'];
+$discount = $item['product']['discount'] ?? 0;
+if ($discount > 0) {
+    $price -= $price * ($discount / 100);
+}
+$subtotal = $price * $newQty;
 $total = 0;
 foreach ($_SESSION['cart'] as $c) {
-    $total += $c['product']['price'] * $c['quantity'];
+    $p = $c['product']['price'];
+    $d = $c['product']['discount'] ?? 0;
+    if ($d > 0) {
+        $p -= $p * ($d / 100);
+    }
+    $total += $p * $c['quantity'];
 }
 
 // إرسال الرد

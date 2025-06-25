@@ -48,8 +48,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 
     $total = 0;
-    foreach ($cart as $item) {
-        $total += $item['product']['price'] * $item['quantity'];
+    foreach ($cart as &$item) {
+        $price = $item['product']['price'];
+        $discount = $item['product']['discount'] ?? 0;
+        if ($discount > 0) {
+            $price -= $price * ($discount / 100);
+        }
+        $item['final_price'] = $price;
+        $total += $price * $item['quantity'];
     }
     if ($discountPercent > 0) {
         $total -= $total * ($discountPercent / 100);

@@ -44,7 +44,16 @@ while ($row = mysqli_fetch_assoc($stock_res)) {
       <h2><?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?></h2>
       <p class="text-muted">Category: <?php echo htmlspecialchars($product['catname'], ENT_QUOTES, 'UTF-8'); ?></p>
       <p><?php echo htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8'); ?></p>
-      <p class="h4 text-success mb-4">$<?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?></p>
+<?php
+  $discount = (float)($product['discount'] ?? 0);
+  $price = (float)$product['price'];
+  $final = $discount > 0 ? $price - ($price * ($discount / 100)) : $price;
+?>
+      <?php if ($discount > 0): ?>
+        <p class="h4 mb-4"><span class="text-decoration-line-through text-muted">$<?php echo number_format($price, 2); ?></span> <span class="text-success">$<?php echo number_format($final, 2); ?></span></p>
+      <?php else: ?>
+        <p class="h4 text-success mb-4">$<?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?></p>
+      <?php endif; ?>
 
       <form action="add_to_cart.php" method="POST">
         <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">

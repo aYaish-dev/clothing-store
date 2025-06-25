@@ -3,19 +3,23 @@ include 'db.php';
 $success = $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
-    $hashed = password_hash($password, PASSWORD_DEFAULT);
 
-    $check = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
-    if (mysqli_num_rows($check) > 0) {
-        $error = "Username already exists.";
+    if ($username === '' || strlen($username) > 50) {
+        $error = "Invalid username.";
     } else {
-        $insert = mysqli_query($conn, "INSERT INTO users (username, password, role) VALUES ('$username', '$hashed', 'visitor')");
-        if ($insert) {
-            $success = "Account created! You can login now.";
+        $hashed = password_hash($password, PASSWORD_DEFAULT);
+        $check = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
+        if (mysqli_num_rows($check) > 0) {
+            $error = "Username already exists.";
         } else {
-            $error = "Error creating account.";
+            $insert = mysqli_query($conn, "INSERT INTO users (username, password, role) VALUES ('$username', '$hashed', 'visitor')");
+            if ($insert) {
+                $success = "Account created! You can login now.";
+            } else {
+                $error = "Error creating account.";
+            }
         }
     }
 }

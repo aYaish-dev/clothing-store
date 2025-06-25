@@ -23,6 +23,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_result = mysqli_stmt_get_result($stmt);
     $product = mysqli_fetch_assoc($product_result);
 
+    if ($product && $product['discount'] > 0) {
+        $product['price'] = $product['price'] - ($product['price'] * $product['discount'] / 100);
+    }
+
     if (!$product) {
         $_SESSION['message'] = "❌ Product not found.";
         header("Location: cart.php");

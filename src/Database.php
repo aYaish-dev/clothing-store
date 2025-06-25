@@ -11,7 +11,8 @@ class Database
         $pdo->exec("CREATE TABLE IF NOT EXISTS products (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
-            price REAL
+            price REAL,
+            discount REAL DEFAULT 0
         );");
 
         $pdo->exec("CREATE TABLE IF NOT EXISTS product_sizes (
@@ -41,10 +42,10 @@ class Database
         );");
     }
 
-    public static function addProduct(PDO $pdo, string $name, float $price): int
+    public static function addProduct(PDO $pdo, string $name, float $price, float $discount = 0.0): int
     {
-        $stmt = $pdo->prepare("INSERT INTO products (name, price) VALUES (?, ?)");
-        $stmt->execute([$name, $price]);
+        $stmt = $pdo->prepare("INSERT INTO products (name, price, discount) VALUES (?, ?, ?)");
+        $stmt->execute([$name, $price, $discount]);
         return (int)$pdo->lastInsertId();
     }
 

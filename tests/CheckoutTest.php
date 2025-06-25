@@ -41,4 +41,14 @@ class CheckoutTest extends TestCase
         $this->expectException(\RuntimeException::class);
         Checkout::placeOrder($this->pdo, 1, 'John Doe', '123', 'Street 1', $cart);
     }
+
+    public function testPlaceOrderWithDiscount(): void
+    {
+        $cart = [
+            ['id' => $this->pid, 'size' => 'L', 'qty' => 2, 'price' => 30.0]
+        ];
+        $orderId = Checkout::placeOrder($this->pdo, 1, 'Jane', '555', 'Street 2', $cart, 10.0);
+        $total = $this->pdo->query("SELECT total FROM orders WHERE id = $orderId")->fetchColumn();
+        $this->assertSame(54.0, (float)$total);
+    }
 }

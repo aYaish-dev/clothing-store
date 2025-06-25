@@ -79,6 +79,10 @@ if (empty($cart)) {
                 <label class="form-label">Address:</label>
                 <textarea name="address" class="form-control" rows="3" pattern="[\p{L}\d\s,.-]{5,200}" title="Address" required></textarea>
             </div>
+            <div class="mb-3">
+                <label class="form-label">Coupon Code (optional):</label>
+                <input type="text" name="coupon" class="form-control">
+            </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-success w-100">✅ Confirm Order</button>
             </div>

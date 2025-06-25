@@ -38,7 +38,7 @@ while ($row = mysqli_fetch_assoc($stock_res)) {
 <div class="container py-5">
   <div class="row">
     <div class="col-md-6 text-center">
-      <img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" class="img-fluid" style="max-height:400px; object-fit:cover;">
+      <img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" class="img-fluid product-detail-img">
     </div>
     <div class="col-md-6">
       <h2><?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?></h2>

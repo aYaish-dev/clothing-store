@@ -53,7 +53,7 @@ require_once 'session.php';
 
         echo "<div class='col-md-4 mb-4'>";
         echo "<div class='card shadow-sm border-0 h-100'>";
-        echo "<img src='uploads/{$pimage}' alt='{$pname}' class='card-img-top' style='height: 320px; object-fit: cover;'>";
+        echo "<img src='uploads/{$pimage}' alt='{$pname}' class='card-img-top product-img'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-success fw-bold'>{$pname}</h5>";
         echo "<p class='card-text'>\$ {$pprice}</p>";
@@ -92,7 +92,7 @@ require_once 'session.php';
   </div>
 </div>
 
-<footer class="text-center mt-5 py-3 text-muted">
+<footer class="text-center py-4 footer mt-5">
   &copy; <?php echo date("Y"); ?> Abdallah Clothing. All rights reserved.
 </footer>
 

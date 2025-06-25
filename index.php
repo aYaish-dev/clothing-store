@@ -25,7 +25,7 @@ if (isset($_GET['category'])) {
 <body>
 
 <!-- BANNER -->
-<div class="py-5 text-center bg-white border-bottom">
+<div class="hero text-center">
   <h1 class="display-4 fw-bold">Elevate Your Style</h1>
   <p class="lead text-muted">Discover trendy outfits for Men, Women, and Kids</p>
   <div class="mt-4">
@@ -64,7 +64,7 @@ if (isset($_GET['category'])) {
 
         echo "<div class='col-md-4 mb-4'>";
         echo "<div class='card h-100 shadow-sm'>";
-        echo "<img src='uploads/$image' alt='$name' class='card-img-top' style='height: 320px; object-fit: cover;'>";
+        echo "<img src='uploads/$image' alt='$name' class='card-img-top product-img'>";
         echo "<div class='card-body d-flex flex-column'>";
         echo "<h5 class='card-title'>$name</h5>";
         echo "<p class='card-text text-muted'>\$ " . htmlspecialchars($price, ENT_QUOTES, 'UTF-8') . "</p>";
@@ -96,9 +96,9 @@ if (isset($_GET['category'])) {
 </div>
 
 <!-- FOOTER -->
-<footer class="text-center text-muted py-4 bg-light mt-5 border-top">
+<footer class="text-center py-4 footer mt-5">
   <p class="mb-0">© <?php echo date("Y"); ?> Abdallah Clothing. All rights reserved.</p>
-  <small><a href="#" class="text-muted">About</a> · <a href="#" class="text-muted">Contact</a> · <a href="#" class="text-muted">Instagram</a></small>
+  <small><a href="#">About</a> · <a href="#">Contact</a> · <a href="#">Instagram</a></small>
 </footer>
 
 <!-- JS for selecting sizes -->

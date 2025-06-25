@@ -19,6 +19,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         exit();
     }
 
+    // ✅ Validate phone number
+    if (!preg_match('/^\+?[0-9\s\-]{7,20}$/', $phone)) {
+        $_SESSION['message'] = "❌ Invalid phone number format.";
+        header("Location: checkout.php");
+        exit();
+    }
+
+    // ✅ Validate address (allow letters, numbers and basic punctuation)
+    if (!preg_match('/^[\p{L}\d\s,.-]{5,200}$/u', $address)) {
+        $_SESSION['message'] = "❌ Invalid address.";
+        header("Location: checkout.php");
+        exit();
+    }
+
+    // ✅ Sanitize address for storage
+    $address = htmlspecialchars($address, ENT_QUOTES, 'UTF-8');
+
     $cart = $_SESSION['cart'] ?? [];
     $user_id = $_SESSION['visitor']['id'] ?? 0;
 

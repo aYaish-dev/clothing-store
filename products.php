@@ -51,20 +51,14 @@ require_once 'session.php';
 
         $pname = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
         $pimage = htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8');
-        $pprice = $row['price'];
-        $pdiscount = $row['discount'];
-        $displayPrice = "$" . htmlspecialchars(number_format($pprice, 2), ENT_QUOTES, 'UTF-8');
-        if ($pdiscount > 0) {
-            $final = $pprice - ($pprice * $pdiscount / 100);
-            $displayPrice = "<span class='text-decoration-line-through'>$" . htmlspecialchars(number_format($pprice, 2), ENT_QUOTES, 'UTF-8') . "</span> <span class='text-danger'>$" . number_format($final, 2) . "</span>";
-        }
+        $pprice = htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8');
 
         echo "<div class='col-lg-3 col-md-4 col-sm-6 mb-4'>";
         echo "<div class='card product-card border-0 h-100'>";
         echo "<img src='uploads/{$pimage}' alt='{$pname}' class='card-img-top product-img'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-success fw-bold'>{$pname}</h5>";
-        echo "<p class='card-text'>{$displayPrice}</p>";
+        echo "<p class='card-text'>\$ {$pprice}</p>";
 
         // Get stock per size
         $stock_sql = "SELECT size, quantity FROM product_sizes WHERE product_id = $id";

@@ -34,7 +34,6 @@ $result = mysqli_query($conn, $query);
                     <th>Name</th>
                     <th>Description</th>
                     <th>Price</th>
-                    <th>Discount (%)</th>
                     <th>Category</th>
                     <th style="width: 150px;">Actions</th>
                 </tr>
@@ -46,7 +45,6 @@ $result = mysqli_query($conn, $query);
                         <td><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>$<?php echo htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8'); ?></td>
-                        <td><?php echo htmlspecialchars($row['discount'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><span class="badge bg-secondary"><?php echo htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                         <td>
                             <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">✏️ Edit</a>

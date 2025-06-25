@@ -3,6 +3,7 @@ declare(strict_types=1);
 namespace Store;
 
 use PDO;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Checkout
 {
@@ -37,13 +38,7 @@ class Checkout
         }
         $pdo->commit();
         $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-        $gmailUser = getenv('gmail_user');
-        $gmailPass = getenv('gmail_pass');
-        if (!empty($gmailUser) && !empty($gmailPass)) {
-            @mail($adminEmail, 'New Order', "New order #$orderId placed by $fullname. Total: $$total");
-        } else {
-            error_log('Skipping mail: missing Gmail credentials');
-        }
+
         return $orderId;
     }
 }

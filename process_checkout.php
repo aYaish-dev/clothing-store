@@ -114,8 +114,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     mysqli_commit($conn);
 
      $message = "New order #$order_id placed by $fullname. Total: $$total";
-    $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-    @mail($adminEmail, 'New Order', $message);
+    $adminEmail = $admin_email ?? (getenv('ADMIN_EMAIL') ?: 'admin@example.com');
+    $gmailUser  = $gmail_user ?? (getenv('GMAIL_USER') ?: 'yourgmail@gmail.com');
+    $headers    = "From: $gmailUser";
+    @mail($adminEmail, 'New Order', $message, $headers);
 
     unset($_SESSION['cart']);
     $_SESSION['message'] = "✅ Order placed successfully!";

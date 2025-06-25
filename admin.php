@@ -41,11 +41,11 @@ $result = mysqli_query($conn, $query);
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                     <tr>
-                        <td><img src="uploads/<?php echo $row['image']; ?>" width="80" class="img-thumbnail"></td>
-                        <td><?php echo $row['name']; ?></td>
-                        <td><?php echo $row['description']; ?></td>
-                        <td>$<?php echo $row['price']; ?></td>
-                        <td><span class="badge bg-secondary"><?php echo $row['category_name']; ?></span></td>
+                        <td><img src="uploads/<?php echo htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8'); ?>" width="80" class="img-thumbnail"></td>
+                        <td><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><?php echo htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td>$<?php echo htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8'); ?></td>
+                        <td><span class="badge bg-secondary"><?php echo htmlspecialchars($row['category_name'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                         <td>
                             <a href="edit.php?id=<?php echo $row['id']; ?>" class="btn btn-warning btn-sm">✏️ Edit</a>
                             <a href="delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this product?')">🗑️ Delete</a>

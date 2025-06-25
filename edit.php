@@ -62,25 +62,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <form action="edit.php?id=<?php echo $id; ?>" method="POST" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label">Product Name:</label>
-                <input type="text" name="name" class="form-control" value="<?php echo $product['name']; ?>" required>
+                <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Price ($):</label>
-                <input type="number" name="price" step="0.01" class="form-control" value="<?php echo $product['price']; ?>" required>
+                <input type="number" name="price" step="0.01" class="form-control" value="<?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?>" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Description:</label>
-                <textarea name="description" class="form-control" rows="3" required><?php echo $product['description']; ?></textarea>
+                <textarea name="description" class="form-control" rows="3" required><?php echo htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8'); ?></textarea>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Category:</label>
                 <select name="category_id" class="form-select" required>
                     <?php while ($cat = mysqli_fetch_assoc($categories)) { ?>
-                        <option value="<?php echo $cat['id']; ?>" <?php if ($product['category_id'] == $cat['id']) echo 'selected'; ?>>
-                            <?php echo $cat['name']; ?>
+                        <option value="<?php echo htmlspecialchars($cat['id'], ENT_QUOTES, 'UTF-8'); ?>" <?php if ($product['category_id'] == $cat['id']) echo 'selected'; ?>>
+                            <?php echo htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8'); ?>
                         </option>
                     <?php } ?>
                 </select>
@@ -116,7 +116,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="mb-3">
                 <label class="form-label">Current Image:</label><br>
-                <img src="uploads/<?php echo $product['image']; ?>" width="100" class="img-thumbnail mb-2"><br>
+                <img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" width="100" class="img-thumbnail mb-2"><br>
                 <label class="form-label">Change Image (optional):</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
             </div>

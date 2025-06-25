@@ -44,9 +44,9 @@ $result = mysqli_query($conn, $query);
 
     while ($row = mysqli_fetch_assoc($result)):
         $id = $row['id'];
-        $name = $row['name'];
+        $name = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
         $price = $row['price'];
-        $image = $row['image'];
+        $image = htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8');
 
         // Fetch stock per size
         $stock_sql = "SELECT size, quantity FROM product_sizes WHERE product_id = $id";
@@ -61,10 +61,10 @@ $result = mysqli_query($conn, $query);
         echo "<img src='uploads/$image' class='card-img-top' style='height: 320px; object-fit: cover;'>";
         echo "<div class='card-body d-flex flex-column'>";
         echo "<h5 class='card-title'>$name</h5>";
-        echo "<p class='card-text text-muted'>\$ $price</p>";
+        echo "<p class='card-text text-muted'>\$ " . htmlspecialchars($price, ENT_QUOTES, 'UTF-8') . "</p>";
 
         echo "<form action='add_to_cart.php' method='POST'>";
-        echo "<input type='hidden' name='product_id' value='$id'>";
+        echo "<input type='hidden' name='product_id' value='" . htmlspecialchars($id, ENT_QUOTES, 'UTF-8') . "'>";
         echo "<input type='hidden' name='size' id='selected-size-$id' required>";
         echo "<input type='hidden' name='quantity' value='1'>";
 

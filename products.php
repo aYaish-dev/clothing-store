@@ -40,12 +40,16 @@ session_start();
         $id = $row['id'];
         $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
+        $pname = htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8');
+        $pimage = htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8');
+        $pprice = htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8');
+
         echo "<div class='col-md-4 mb-4'>";
         echo "<div class='card shadow-sm border-0 h-100'>";
-        echo "<img src='uploads/{$row['image']}' class='card-img-top' style='height: 320px; object-fit: cover;'>";
+        echo "<img src='uploads/{$pimage}' class='card-img-top' style='height: 320px; object-fit: cover;'>";
         echo "<div class='card-body'>";
-        echo "<h5 class='card-title text-success fw-bold'>{$row['name']}</h5>";
-        echo "<p class='card-text'>\$ {$row['price']}</p>";
+        echo "<h5 class='card-title text-success fw-bold'>{$pname}</h5>";
+        echo "<p class='card-text'>\$ {$pprice}</p>";
 
         // Get stock per size
         $stock_sql = "SELECT size, quantity FROM product_sizes WHERE product_id = $id";
@@ -56,7 +60,7 @@ session_start();
         }
 
         echo "<form action='add_to_cart.php' method='POST'>";
-        echo "<input type='hidden' name='product_id' value='{$row['id']}'>";
+        echo "<input type='hidden' name='product_id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
         echo "<input type='hidden' name='size' id='selected-size-{$id}' required>";
         echo "<input type='hidden' name='quantity' value='1'>";
 

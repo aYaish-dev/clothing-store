@@ -113,6 +113,17 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_commit($conn);
 
+    // Send an email notification to the store admin
+    $subject = "New Order #$order_id";
+    $body    = "A new order has been placed on the Clothing Store.\n\n" .
+               "Order ID: $order_id\n" .
+               "Customer: $fullname\n" .
+               "Phone: $phone\n" .
+               "Address: $address\n" .
+               "Total: $" . number_format($total, 2) . "\n";
+    $headers = "From: $gmail_user";
+    @mail($admin_email, $subject, $body, $headers);
+
 
     unset($_SESSION['cart']);
     $_SESSION['message'] = "✅ Order placed successfully!";

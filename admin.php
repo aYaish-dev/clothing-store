@@ -41,7 +41,7 @@ $result = mysqli_query($conn, $query);
             <tbody>
                 <?php while ($row = mysqli_fetch_assoc($result)) { ?>
                     <tr>
-                        <td><img src="uploads/<?php echo htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8'); ?>" width="80" class="img-thumbnail"></td>
+                        <td><img src="uploads/<?php echo htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>" width="80" class="img-thumbnail"></td>
                         <td><?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td><?php echo htmlspecialchars($row['description'], ENT_QUOTES, 'UTF-8'); ?></td>
                         <td>$<?php echo htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8'); ?></td>

@@ -25,7 +25,7 @@ $result = mysqli_stmt_get_result($stmt);
       <?php while ($row = mysqli_fetch_assoc($result)): ?>
         <div class="col-md-4 mb-4">
           <div class="card h-100 product-card">
-            <img src="uploads/<?php echo htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8'); ?>" class="card-img-top" style="height:300px; object-fit:cover;">
+            <img src="uploads/<?php echo htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>" class="card-img-top" style="height:300px; object-fit:cover;">
             <div class="card-body d-flex flex-column">
               <h5 class="card-title"><?php echo htmlspecialchars($row['name']); ?></h5>
               <p class="text-muted mb-2">Category: <?php echo htmlspecialchars($row['category_name']); ?></p>

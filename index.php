@@ -26,7 +26,7 @@ if (isset($_GET['category'])) {
 
 <!-- BANNER -->
 <div class="hero text-center">
-  <h1 class="display-4 fw-bold">DeFacto Fashion</h1>
+  <h1 class="display-4 fw-bold">Abdallah's Fashion</h1>
   <p class="lead text-muted">Latest styles for everyone</p>
   <div class="mt-4">
     <a href="products.php" class="btn btn-dark px-4 me-2">🛍️ Browse Products</a>

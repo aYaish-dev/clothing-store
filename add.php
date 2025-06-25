@@ -85,7 +85,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select name="category_id" class="form-select" required>
                     <option value="" disabled selected>Choose category</option>
                     <?php while ($cat = mysqli_fetch_assoc($category_result)) { ?>
-                        <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
+                        <option value="<?php echo htmlspecialchars($cat['id'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8'); ?></option>
                     <?php } ?>
                 </select>
             </div>

@@ -33,14 +33,36 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock_xl = $_POST['stock_xl'];
     $stock_xxl = $_POST['stock_xxl'];
 
-    if (!empty($_FILES['image']['name'])) {
-        $image = $_FILES['image']['name'];
-        $target = "uploads/" . basename($image);
-        move_uploaded_file($_FILES['image']['tmp_name'], $target);
+    $image = $product['image'];
 
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
+    if (!empty($_FILES['image']['name'])) {
+        $allowedExts = ['jpg', 'jpeg', 'png'];
+        $allowedTypes = ['image/jpeg', 'image/png'];
+        $maxSize = 2 * 1024 * 1024; // 2MB
+
+        $imageFile = $_FILES['image'];
+        $ext = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
+        $mime = mime_content_type($imageFile['tmp_name']);
+
+        if ($imageFile['size'] > $maxSize) {
+            $error = "❌ Image exceeds size limit.";
+        } elseif (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
+            $error = "❌ Invalid image type.";
+        } else {
+            $uniqueName = uniqid('img_', true) . '.' . $ext;
+            $target = "uploads/" . $uniqueName;
+            if (move_uploaded_file($imageFile['tmp_name'], $target)) {
+                $image = $uniqueName;
+            } else {
+                $error = "❌ Image upload failed.";
+            }
+        }
+    }
+
+    if (!$error) {
+        $update = "UPDATE products SET
+                    name='$name',
+                    price='$price',
                     description='$description',
                     category_id='$category_id',
                     image='$image',
@@ -51,26 +73,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     stock_xl='$stock_xl',
                     stock_xxl='$stock_xxl'
                    WHERE id=$id";
-    } else {
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
-    }
 
-    if (mysqli_query($conn, $update)) {
-        $success = "✅ Product updated successfully!";
-        $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
-    } else {
-        $error = "❌ Error updating product: " . mysqli_error($conn);
+        if (mysqli_query($conn, $update)) {
+            $success = "✅ Product updated successfully!";
+            $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
+        } else {
+            $error = "❌ Error updating product: " . mysqli_error($conn);
+        }
     }
 }
 ?>

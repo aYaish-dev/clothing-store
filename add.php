@@ -20,32 +20,45 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $price = $_POST['price'];
     $description = $_POST['description'];
     $category_id = $_POST['category_id'];
-    $image = $_FILES['image']['name'];
-    $target = "uploads/" . basename($image);
 
-    if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
-        // إدخال المنتج في جدول products
-        $sql = "INSERT INTO products (name, price, description, image, category_id)
-                VALUES ('$name', '$price', '$description', '$image', '$category_id')";
+    $allowedExts = ['jpg', 'jpeg', 'png'];
+    $allowedTypes = ['image/jpeg', 'image/png'];
+    $maxSize = 2 * 1024 * 1024; // 2MB
 
-        if (mysqli_query($conn, $sql)) {
-            $product_id = mysqli_insert_id($conn); // الحصول على ID المنتج الجديد
+    $imageFile = $_FILES['image'];
+    $ext = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
+    $mime = mime_content_type($imageFile['tmp_name']);
 
-            // إدخال الكمية لكل مقاس في جدول product_sizes
-            foreach ($sizes as $size) {
-                $qty = (int)($_POST['size_qty'][$size] ?? 0);
-                $stmt = mysqli_prepare($conn, "INSERT INTO product_sizes (product_id, size, quantity) VALUES (?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "isi", $product_id, $size, $qty);
-                mysqli_stmt_execute($stmt);
-            }
-
-            $success = "✅ Product added successfully with sizes!";
-        } else {
-            $error = "❌ Database error: " . mysqli_error($conn);
-        }
+    if ($imageFile['size'] > $maxSize) {
+        $error = "❌ Image exceeds size limit.";
+    } elseif (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
+        $error = "❌ Invalid image type.";
     } else {
-        $error = "❌ Image upload failed.";
-    }
+        $uniqueName = uniqid('img_', true) . '.' . $ext;
+        $target = "uploads/" . $uniqueName;
+        if (move_uploaded_file($imageFile['tmp_name'], $target)) {
+            // إدخال المنتج في جدول products
+            $sql = "INSERT INTO products (name, price, description, image, category_id)
+                    VALUES ('$name', '$price', '$description', '$uniqueName', '$category_id')";
+
+            if (mysqli_query($conn, $sql)) {
+                $product_id = mysqli_insert_id($conn); // الحصول على ID المنتج الجديد
+
+                // إدخال الكمية لكل مقاس في جدول product_sizes
+                foreach ($sizes as $size) {
+                    $qty = (int)($_POST['size_qty'][$size] ?? 0);
+                    $stmt = mysqli_prepare($conn, "INSERT INTO product_sizes (product_id, size, quantity) VALUES (?, ?, ?)");
+                    mysqli_stmt_bind_param($stmt, "isi", $product_id, $size, $qty);
+                    mysqli_stmt_execute($stmt);
+                }
+
+                $success = "✅ Product added successfully with sizes!";
+            } else {
+                $error = "❌ Database error: " . mysqli_error($conn);
+            }
+        } else {
+            $error = "❌ Image upload failed.";
+        }
 }
 ?>
 

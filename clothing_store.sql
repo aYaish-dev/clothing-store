@@ -464,7 +464,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `username`, `password`, `role`) VALUES
-(1, 'admin', 'admin123', 'admin'),
+(1, 'admin', '$2y$10$abcdefghijklmnopqrstuuEZ4tpXm4W5SeJkDbuNdfJ.CF0.Wc2V2', 'admin'),
 (2, 'abd', '$2y$10$SG5MfN1aqa8RSIGWOXHDl.WOBs.lnZuC.aNpBRlRZxoh/.AlCto5m', 'visitor');
 
 --

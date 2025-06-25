@@ -4,12 +4,7 @@ include 'db.php';
 include 'csrf.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!verify_csrf_token($_POST['token'] ?? '')) {
-        die('Invalid CSRF token');
-    }
-    $username = mysqli_real_escape_string($conn, $_POST['fullname']);
-    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-    $address = mysqli_real_escape_string($conn, $_POST['address']);
+
 
     $cart = $_SESSION['cart'] ?? [];
 

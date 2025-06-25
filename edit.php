@@ -23,12 +23,9 @@ $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    if (!verify_csrf_token($_POST['token'] ?? '')) {
-        die('Invalid CSRF token');
-    }
-    $name = $_POST['name'];
+
     $price = $_POST['price'];
-    $description = $_POST['description'];
+    $description = trim($_POST['description']);
     $category_id = $_POST['category_id'];
     $stock_xs = $_POST['stock_xs'];
     $stock_s = $_POST['stock_s'];
@@ -37,44 +34,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock_xl = $_POST['stock_xl'];
     $stock_xxl = $_POST['stock_xxl'];
 
-    if (!empty($_FILES['image']['name'])) {
-        $image = $_FILES['image']['name'];
-        $target = "uploads/" . basename($image);
-        move_uploaded_file($_FILES['image']['tmp_name'], $target);
 
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    image='$image',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
-    } else {
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
-    }
-
-    if (mysqli_query($conn, $update)) {
-        $success = "✅ Product updated successfully!";
-        $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
-    } else {
-        $error = "❌ Error updating product: " . mysqli_error($conn);
+        if (mysqli_query($conn, $update)) {
+            $success = "✅ Product updated successfully!";
+            $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
+        } else {
+            $error = "❌ Error updating product: " . mysqli_error($conn);
+        }
     }
 }
 ?>
@@ -98,25 +64,25 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <div class="mb-3">
                 <label class="form-label">Product Name:</label>
-                <input type="text" name="name" class="form-control" value="<?php echo $product['name']; ?>" required>
+                <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Price ($):</label>
-                <input type="number" name="price" step="0.01" class="form-control" value="<?php echo $product['price']; ?>" required>
+                <input type="number" name="price" step="0.01" class="form-control" value="<?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?>" required>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Description:</label>
-                <textarea name="description" class="form-control" rows="3" required><?php echo $product['description']; ?></textarea>
+                <textarea name="description" class="form-control" rows="3" required><?php echo htmlspecialchars($product['description'], ENT_QUOTES, 'UTF-8'); ?></textarea>
             </div>
 
             <div class="mb-3">
                 <label class="form-label">Category:</label>
                 <select name="category_id" class="form-select" required>
                     <?php while ($cat = mysqli_fetch_assoc($categories)) { ?>
-                        <option value="<?php echo $cat['id']; ?>" <?php if ($product['category_id'] == $cat['id']) echo 'selected'; ?>>
-                            <?php echo $cat['name']; ?>
+                        <option value="<?php echo htmlspecialchars($cat['id'], ENT_QUOTES, 'UTF-8'); ?>" <?php if ($product['category_id'] == $cat['id']) echo 'selected'; ?>>
+                            <?php echo htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8'); ?>
                         </option>
                     <?php } ?>
                 </select>
@@ -152,7 +118,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
             <div class="mb-3">
                 <label class="form-label">Current Image:</label><br>
-                <img src="uploads/<?php echo $product['image']; ?>" width="100" class="img-thumbnail mb-2"><br>
+                <img src="uploads/<?php echo htmlspecialchars($product['image'], ENT_QUOTES, 'UTF-8'); ?>" width="100" class="img-thumbnail mb-2"><br>
                 <label class="form-label">Change Image (optional):</label>
                 <input type="file" name="image" class="form-control" accept="image/*">
             </div>

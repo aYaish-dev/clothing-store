@@ -27,7 +27,7 @@ $result = mysqli_query($conn, $query);
     <?php if (mysqli_num_rows($result) > 0): ?>
         <?php while ($row = mysqli_fetch_assoc($result)) { ?>
             <div class="product-card">
-                <img src="uploads/<?php echo $row['image']; ?>" alt="Product Image" class="product-img">
+                <img src="uploads/<?php echo htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="Product Image" class="product-img">
                 <h3><?php echo htmlspecialchars($row['name']); ?></h3>
                 <p><?php echo htmlspecialchars($row['description']); ?></p>
                 <p><strong>$<?php echo $row['price']; ?></strong></p>

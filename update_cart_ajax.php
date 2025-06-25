@@ -15,6 +15,10 @@ if (!verify_csrf_token($_POST['token'])) {
 
 $key = $_POST['key'];
 $newQty = (int) $_POST['quantity'];
+if ($newQty < 1 || $newQty > 1000) {
+    echo json_encode(['success' => false, 'message' => 'Invalid quantity']);
+    exit;
+}
 
 if (!isset($_SESSION['cart'][$key])) {
     echo json_encode(['success' => false, 'message' => 'Item not found in cart']);

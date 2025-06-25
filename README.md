@@ -46,7 +46,7 @@ It supports both frontend and admin functionalities, along with size-based inven
      ```
 
 3. Configure PHP:
-   - Update `db.php` with your MySQL credentials if they differ from the defaults.
+   - `db.php` now reads MySQL credentials from environment variables. Set `DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_NAME` as needed (defaults are `localhost`, `root`, an empty password, and `clothing_store`).
    - Ensure the `mysqli` extension is enabled in `php.ini`.
    - Verify `file_uploads` is `On` and adjust `upload_max_filesize` if needed for product images.
 

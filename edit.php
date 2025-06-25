@@ -22,9 +22,9 @@ $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
+    $name = trim($_POST['name']);
     $price = $_POST['price'];
-    $description = $_POST['description'];
+    $description = trim($_POST['description']);
     $category_id = $_POST['category_id'];
     $stock_xs = $_POST['stock_xs'];
     $stock_s = $_POST['stock_s'];
@@ -33,46 +33,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock_xl = $_POST['stock_xl'];
     $stock_xxl = $_POST['stock_xxl'];
 
-    $image = $product['image'];
-
-    if (!empty($_FILES['image']['name'])) {
-        $allowedExts = ['jpg', 'jpeg', 'png'];
-        $allowedTypes = ['image/jpeg', 'image/png'];
-        $maxSize = 2 * 1024 * 1024; // 2MB
-
-        $imageFile = $_FILES['image'];
-        $ext = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
-        $mime = mime_content_type($imageFile['tmp_name']);
-
-        if ($imageFile['size'] > $maxSize) {
-            $error = "❌ Image exceeds size limit.";
-        } elseif (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
-            $error = "❌ Invalid image type.";
-        } else {
-            $uniqueName = uniqid('img_', true) . '.' . $ext;
-            $target = "uploads/" . $uniqueName;
-            if (move_uploaded_file($imageFile['tmp_name'], $target)) {
-                $image = $uniqueName;
-            } else {
-                $error = "❌ Image upload failed.";
-            }
-        }
-    }
-
-    if (!$error) {
-        $update = "UPDATE products SET
-                    name='$name',
-                    price='$price',
-                    description='$description',
-                    category_id='$category_id',
-                    image='$image',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
 
         if (mysqli_query($conn, $update)) {
             $success = "✅ Product updated successfully!";

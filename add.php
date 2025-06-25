@@ -16,9 +16,9 @@ $category_result = mysqli_query($conn, "SELECT * FROM categories");
 $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
+    $name = trim($_POST['name']);
     $price = $_POST['price'];
-    $description = $_POST['description'];
+    $description = trim($_POST['description']);
     $category_id = $_POST['category_id'];
 
     $allowedExts = ['jpg', 'jpeg', 'png'];
@@ -59,6 +59,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $error = "❌ Image upload failed.";
         }
+
 }
 ?>
 

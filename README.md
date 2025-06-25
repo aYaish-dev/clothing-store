@@ -49,3 +49,11 @@ It supports both frontend and admin functionalities, along with size-based inven
    - Update `db.php` with your MySQL credentials if they differ from the defaults.
    - Ensure the `mysqli` extension is enabled in `php.ini`.
    - Verify `file_uploads` is `On` and adjust `upload_max_filesize` if needed for product images.
+
+4. **Migrating Admin Passwords**:
+   - The `users` table now stores hashed passwords. If you are upgrading from an
+     older version where the admin password was stored in plain text, run:
+     ```bash
+     php migrate_admin_password.php your_old_password
+     ```
+     This will hash the password and update the admin record.

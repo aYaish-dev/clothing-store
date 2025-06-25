@@ -34,7 +34,7 @@ $result = mysqli_stmt_get_result($stmt);
                 <p><?php echo htmlspecialchars($row['description']); ?></p>
                 <p><strong>$<?php echo $row['price']; ?></strong></p>
                 <p class="category">Category: <?php echo htmlspecialchars($row['category_name']); ?></p>
-                <a href="add_to_cart.php?id=<?php echo $row['id']; ?>" class="btn">Add to Cart 🛒</a>
+                <a href="product.php?id=<?php echo $row['id']; ?>" class="btn">View &amp; Select Size</a>
             </div>
         <?php } ?>
     <?php else: ?>

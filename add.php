@@ -21,6 +21,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } else {
         $name = trim($_POST['name']);
         $price = (float)$_POST['price'];
+        $discount = isset($_POST['discount']) ? (float)$_POST['discount'] : 0;
         $description = trim($_POST['description']);
         $category_id = (int)$_POST['category_id'];
 
@@ -40,8 +41,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $base = preg_replace('/[^A-Za-z0-9_-]/', '', pathinfo($imageFile['name'], PATHINFO_FILENAME));
         $newName = $base . '_' . time() . '.' . $ext;
         if (move_uploaded_file($imageFile['tmp_name'], __DIR__ . "/uploads/" . $newName)) {
-            $stmt = mysqli_prepare($conn, "INSERT INTO products (name, price, description, image, category_id) VALUES (?, ?, ?, ?, ?)");
-            mysqli_stmt_bind_param($stmt, "sdssi", $name, $price, $description, $newName, $category_id);
+            $stmt = mysqli_prepare($conn, "INSERT INTO products (name, price, discount, description, image, category_id) VALUES (?, ?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "sddssi", $name, $price, $discount, $description, $newName, $category_id);
             if (mysqli_stmt_execute($stmt)) {
                 $pid = mysqli_insert_id($conn);
                 foreach ($_POST['size_qty'] as $size => $qty) {
@@ -87,6 +88,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <div class="mb-3">
                 <label class="form-label">Price ($):</label>
                 <input type="number" name="price" step="0.01" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Discount (%):</label>
+                <input type="number" name="discount" step="0.01" class="form-control" value="0">
             </div>
 
             <div class="mb-3">

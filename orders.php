@@ -4,7 +4,7 @@ include 'db.php';
 
 // فقط للمشرفين
 if (!isset($_SESSION['admin'])) {
-    header("Location: admin_login.php");
+    header('Location: login.php');
     exit();
 }
 

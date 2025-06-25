@@ -113,15 +113,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_commit($conn);
 
-    $message = "New order #$order_id placed by $fullname. Total: $$total";
-    $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-    $gmailUser = getenv('gmail_user');
-    $gmailPass = getenv('gmail_pass');
-    if (!empty($gmailUser) && !empty($gmailPass)) {
-        @mail($adminEmail, 'New Order', $message);
-    } else {
-        error_log('Skipping mail: missing Gmail credentials');
-    }
 
     unset($_SESSION['cart']);
     $_SESSION['message'] = "✅ Order placed successfully!";

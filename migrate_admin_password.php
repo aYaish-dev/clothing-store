@@ -16,8 +16,9 @@ $plain = $argv[1];
 $hash  = password_hash($plain, PASSWORD_DEFAULT);
 
 $sql = "UPDATE users SET password='" . mysqli_real_escape_string($conn, $hash) . "' WHERE username='admin'";
-if (mysqli_query($conn, $sql)) {
+try {
+    mysqli_query($conn, $sql);
     echo "Admin password updated.\n";
-} else {
-    echo "Error: " . mysqli_error($conn) . "\n";
+} catch (mysqli_sql_exception $e) {
+    echo "Error: " . $e->getMessage() . "\n";
 }

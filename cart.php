@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 $cart = $_SESSION['cart'] ?? [];
@@ -52,7 +52,7 @@ $total = 0;
                   <button class="btn btn-outline-secondary btn-sm qty-btn" data-action="increase">+</button>
                 </div>
                 <p class="mb-1 text-muted subtotal">Subtotal: <strong>$<?= number_format($subtotal, 2) ?></strong></p>
-                <a href="remove_from_cart.php?id=<?= urlencode($key) ?>" class="btn btn-sm btn-outline-danger">🗑️</a>
+                <a href="remove_from_cart.php?id=<?= urlencode($key) ?>&csrf_token=<?= $_SESSION['csrf_token'] ?>" class="btn btn-sm btn-outline-danger">🗑️</a>
               </div>
             </div>
           </div>
@@ -85,6 +85,7 @@ $total = 0;
 
 <!-- ✅ JavaScript -->
 <script>
+const csrfToken = '<?php echo $_SESSION['csrf_token']; ?>';
 document.querySelectorAll(".qty-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const action = btn.dataset.action;
@@ -108,7 +109,7 @@ document.querySelectorAll(".qty-btn").forEach(btn => {
     fetch("update_cart_ajax.php", {
       method: "POST",
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `key=${encodeURIComponent(key)}&quantity=${qty}`
+      body: `key=${encodeURIComponent(key)}&quantity=${qty}&csrf_token=${encodeURIComponent(csrfToken)}`
     })
     .then(res => res.json())
     .then(data => {

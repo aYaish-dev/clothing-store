@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 if (!isset($_GET['id'])) {
@@ -47,6 +47,7 @@ while ($row = mysqli_fetch_assoc($stock_res)) {
       <p class="h4 text-success mb-4">$<?php echo htmlspecialchars($product['price'], ENT_QUOTES, 'UTF-8'); ?></p>
 
       <form action="add_to_cart.php" method="POST">
+        <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
         <input type="hidden" name="product_id" value="<?php echo $id; ?>">
         <input type="hidden" name="size" id="selected-size-<?php echo $id; ?>" required>
         <input type="hidden" name="quantity" value="1">

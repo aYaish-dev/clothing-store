@@ -1,33 +1,36 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $pass = $_POST['password'];
-
-    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE username=? AND role='visitor'");
-    mysqli_stmt_bind_param($stmt, "s", $username);
-    mysqli_stmt_execute($stmt);
-    $result = mysqli_stmt_get_result($stmt);
-
-if (mysqli_num_rows($result) == 1) {
-    $visitor = mysqli_fetch_assoc($result);
-
-    if (password_verify($pass, $visitor['password'])) {
-        $_SESSION['visitor'] = [
-            'id' => $visitor['id'],
-            'name' => $visitor['username']
-        ];
-        header("Location: index.php");
-        exit();
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = "Invalid CSRF token.";
     } else {
-        $error = "Invalid username or password.";
-    }
-} else {
-    $error = "Invalid username or password.";
-}
+        $username = trim($_POST['username']);
+        $pass = $_POST['password'];
 
+        $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE username=? AND role='visitor'");
+        mysqli_stmt_bind_param($stmt, "s", $username);
+        mysqli_stmt_execute($stmt);
+        $result = mysqli_stmt_get_result($stmt);
+
+        if (mysqli_num_rows($result) == 1) {
+            $visitor = mysqli_fetch_assoc($result);
+
+            if (password_verify($pass, $visitor['password'])) {
+                $_SESSION['visitor'] = [
+                    'id' => $visitor['id'],
+                    'name' => $visitor['username']
+                ];
+                header("Location: index.php");
+                exit();
+            } else {
+                $error = "Invalid username or password.";
+            }
+        } else {
+            $error = "Invalid username or password.";
+        }
+    }
 }
 ?>
 
@@ -42,6 +45,7 @@ if (mysqli_num_rows($result) == 1) {
                 <h3 class="text-center mb-4">🔑 Login</h3>
                 <?php if (isset($error)) echo "<div class='alert alert-danger'>" . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . "</div>"; ?>
                 <form method="POST">
+                    <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
                     <div class="mb-3">
                         <label>Username</label>
                         <input type="text" name="username" required class="form-control">

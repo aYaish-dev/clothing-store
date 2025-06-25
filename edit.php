@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 // Admin Protection
@@ -24,10 +24,13 @@ $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
-    $price = (float)$_POST['price'];
-    $description = trim($_POST['description']);
-    $category_id = (int)$_POST['category_id'];
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = "Invalid CSRF token.";
+    } else {
+        $name = trim($_POST['name']);
+        $price = (float)$_POST['price'];
+        $description = trim($_POST['description']);
+        $category_id = (int)$_POST['category_id'];
     $stock_xs = (int)($_POST['stock_xs'] ?? 0);
     $stock_s = (int)($_POST['stock_s'] ?? 0);
     $stock_m = (int)($_POST['stock_m'] ?? 0);
@@ -109,6 +112,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="card p-4 shadow mx-auto" style="max-width: 600px;">
         <form action="edit.php?id=<?php echo $id; ?>" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="mb-3">
                 <label class="form-label">Product Name:</label>
                 <input type="text" name="name" class="form-control" value="<?php echo htmlspecialchars($product['name'], ENT_QUOTES, 'UTF-8'); ?>" required>

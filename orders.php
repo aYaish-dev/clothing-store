@@ -46,8 +46,9 @@ $result = mysqli_query($conn, $query);
             <form method="post" action="update_order_status.php" class="d-flex justify-content-center">
               <input type="hidden" name="id" value="<?= $row['id'] ?>">
               <select name="status" class="form-select form-select-sm w-auto">
+                <?php $current = $row['status'] ?? 'pending'; ?>
                 <?php foreach(['pending','preparing','completed'] as $st): ?>
-                  <option value="<?= $st ?>" <?= $st === $row['status'] ? 'selected' : '' ?>><?= ucfirst($st) ?></option>
+                  <option value="<?= $st ?>" <?= $st === $current ? 'selected' : '' ?>><?= ucfirst($st) ?></option>
                 <?php endforeach; ?>
               </select>
               <button class="btn btn-sm btn-primary ms-2">Update</button>

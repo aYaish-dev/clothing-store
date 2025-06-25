@@ -135,7 +135,6 @@ CREATE TABLE `products` (
   `stock_xl` int(11) NOT NULL DEFAULT 0,
   `stock_xxl` int(11) NOT NULL DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
 --
 -- Dumping data for table `products`
 --

@@ -36,8 +36,7 @@ class Checkout
             $stmt->execute([$orderId, $item['id'], $item['size'], $item['qty'], $item['price']]);
         }
         $pdo->commit();
-        $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-        @mail($adminEmail, 'New Order', "New order #$orderId placed by $fullname. Total: $$total");
+
         return $orderId;
     }
 }

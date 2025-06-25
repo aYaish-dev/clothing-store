@@ -6,13 +6,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-        } else {
-            $insert = mysqli_query($conn, "INSERT INTO users (username, password, role) VALUES ('$username', '$hashed', 'visitor')");
-            if ($insert) {
-                $success = "Account created! You can login now.";
+    if ($username === '' || $password === '') {
+        $error = "Please fill in all fields.";
+    } else {
+        // Check if the username already exists
+        $check = mysqli_prepare($conn, "SELECT id FROM users WHERE username=?");
+        if ($check) {
+            mysqli_stmt_bind_param($check, "s", $username);
+            mysqli_stmt_execute($check);
+            mysqli_stmt_store_result($check);
+
+            if (mysqli_stmt_num_rows($check) > 0) {
+                $error = "Username already exists.";
             } else {
-                $error = "Error creating account.";
+                // Hash the password and insert the new user
+                $hashed = password_hash($password, PASSWORD_DEFAULT);
+                $insert = mysqli_prepare($conn, "INSERT INTO users (username, password, role) VALUES (?, ?, 'visitor')");
+                if ($insert) {
+                    mysqli_stmt_bind_param($insert, "ss", $username, $hashed);
+                    if (mysqli_stmt_execute($insert)) {
+                        $success = "Account created! You can login now.";
+                    } else {
+                        $error = "Error creating account.";
+                    }
+                    mysqli_stmt_close($insert);
+                } else {
+                    $error = "Error creating account.";
+                }
             }
+            mysqli_stmt_close($check);
+        } else {
+            $error = "Error creating account.";
         }
     }
 }

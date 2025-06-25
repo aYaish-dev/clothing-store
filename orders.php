@@ -45,6 +45,7 @@ $result = mysqli_query($conn, $query);
           <td>
             <form method="post" action="update_order_status.php" class="d-flex justify-content-center">
               <input type="hidden" name="id" value="<?= $row['id'] ?>">
+              <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
               <select name="status" class="form-select form-select-sm w-auto">
                 <?php $current = isset($row['status']) ? $row['status'] : 'pending'; ?>
                 <?php foreach(['pending','preparing','completed'] as $st): ?>

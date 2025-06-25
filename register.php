@@ -5,21 +5,14 @@ $success = $error = "";
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
-    $hashed = password_hash($password, PASSWORD_DEFAULT);
 
-    $stmt = mysqli_prepare($conn, "SELECT id FROM users WHERE username = ?");
-    mysqli_stmt_bind_param($stmt, "s", $username);
-    mysqli_stmt_execute($stmt);
-    $check = mysqli_stmt_get_result($stmt);
-    if (mysqli_num_rows($check) > 0) {
-        $error = "Username already exists.";
-    } else {
-        $stmt = mysqli_prepare($conn, "INSERT INTO users (username, password, role) VALUES (?, ?, 'visitor')");
-        mysqli_stmt_bind_param($stmt, "ss", $username, $hashed);
-        if (mysqli_stmt_execute($stmt)) {
-            $success = "Account created! You can login now.";
         } else {
-            $error = "Error creating account.";
+            $insert = mysqli_query($conn, "INSERT INTO users (username, password, role) VALUES ('$username', '$hashed', 'visitor')");
+            if ($insert) {
+                $success = "Account created! You can login now.";
+            } else {
+                $error = "Error creating account.";
+            }
         }
     }
 }

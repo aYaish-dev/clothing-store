@@ -6,6 +6,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int) $_POST['product_id'];
     $size = trim($_POST['size']);
     $qty = max(1, (int) $_POST['quantity']); // والـ quantity رح توصل كـ hidden = 1
+    if ($qty > 1000) {
+        $qty = 1000;
+    }
 
 
     // 1. Get product info

@@ -17,13 +17,22 @@ $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-    $price = (float)$_POST['price'];
-    $description = trim($_POST['description']);
-    $category_id = (int)$_POST['category_id'];
     $image = $_FILES['image']['name'];
     $target = "uploads/" . basename($image);
 
-    if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
+    if ($name === '' || !is_numeric($price) || $price < 0 || $price > 10000) {
+        $error = "❌ Invalid product details.";
+    } else {
+        foreach ($sizes as $size) {
+            $qty = $_POST['size_qty'][$size] ?? 0;
+            if (!is_numeric($qty) || $qty < 0 || $qty > 1000) {
+                $error = "❌ Invalid quantity for size $size.";
+                break;
+            }
+        }
+    }
+
+    if (!$error && move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
         // إدخال المنتج في جدول products
         // إدخال المنتج في جدول products باستخدام prepared statements
         $stmt = mysqli_prepare($conn, "INSERT INTO products (name, price, description, image, category_id) VALUES (?, ?, ?, ?, ?)");
@@ -44,7 +53,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         } else {
             $error = "❌ Database error: " . mysqli_error($conn);
         }
-    } else {
+    } elseif (!$error) {
         $error = "❌ Image upload failed.";
     }
 }

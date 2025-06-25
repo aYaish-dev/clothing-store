@@ -8,13 +8,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE username='$username' AND password='$password' AND role='admin'";
+    $query = "SELECT * FROM users WHERE username='$username' AND role='admin'";
     $result = mysqli_query($conn, $query);
 
-    if (mysqli_num_rows($result) == 1) {
-        $_SESSION['admin'] = $username;
-        header("Location: admin.php");
-        exit();
+    if ($result && mysqli_num_rows($result) == 1) {
+        $admin = mysqli_fetch_assoc($result);
+        if (password_verify($password, $admin['password'])) {
+            $_SESSION['admin'] = $username;
+            header("Location: admin.php");
+            exit();
+        } else {
+            $error = "Invalid credentials.";
+        }
     } else {
         $error = "Invalid credentials.";
     }

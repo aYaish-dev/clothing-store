@@ -8,9 +8,14 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-// التحقق من وجود ID
-if (isset($_GET['id'])) {
-    $id = (int)$_GET['id'];
+// التحقق من الطلب وطابع CSRF
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'], $_POST['csrf_token'])) {
+    if ($_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        header('HTTP/1.1 400 Bad Request');
+        exit('Invalid CSRF token');
+    }
+
+    $id = (int)$_POST['id'];
 
     // حذف المنتج باستخدام prepared statements
     try {
@@ -23,6 +28,7 @@ if (isset($_GET['id'])) {
         echo "Error deleting product: " . $e->getMessage();
     }
 } else {
-    echo "No product ID provided.";
+    header('HTTP/1.1 405 Method Not Allowed');
+    echo 'Invalid request.';
 }
 ?>

@@ -26,10 +26,13 @@ if (!isset($_SESSION['cart'][$key])) {
 
 $item = $_SESSION['cart'][$key];
 $pid = (int) $item['product']['id'];
-$size = mysqli_real_escape_string($conn, $item['size']);
+$size = $item['size'];
 
-// جلب الكمية المتاحة من قاعدة البيانات
-$stock_result = mysqli_query($conn, "SELECT quantity FROM product_sizes WHERE product_id = $pid AND size = '$size'");
+// جلب الكمية المتاحة من قاعدة البيانات باستخدام استعلام محضر
+$stock_stmt = mysqli_prepare($conn, "SELECT quantity FROM product_sizes WHERE product_id = ? AND size = ?");
+mysqli_stmt_bind_param($stock_stmt, "is", $pid, $size);
+mysqli_stmt_execute($stock_stmt);
+$stock_result = mysqli_stmt_get_result($stock_stmt);
 $stock_row = mysqli_fetch_assoc($stock_result);
 $stock = $stock_row['quantity'] ?? 0;
 

@@ -29,8 +29,11 @@ $total = 0;
 
               // Get max stock for the selected product and size
               $pid = $product['id'];
-              $stock_query = mysqli_query($conn, "SELECT quantity FROM product_sizes WHERE product_id = $pid AND size = '$size'");
-              $stock_row = mysqli_fetch_assoc($stock_query);
+              $stock_stmt = mysqli_prepare($conn, "SELECT quantity FROM product_sizes WHERE product_id = ? AND size = ?");
+              mysqli_stmt_bind_param($stock_stmt, "is", $pid, $size);
+              mysqli_stmt_execute($stock_stmt);
+              $stock_result = mysqli_stmt_get_result($stock_stmt);
+              $stock_row = mysqli_fetch_assoc($stock_result);
               $maxStock = $stock_row['quantity'] ?? 0;
           ?>
           <div class="card mb-3 shadow-sm cart-item" data-key="<?= htmlspecialchars($key, ENT_QUOTES, 'UTF-8') ?>" data-stock="<?= htmlspecialchars($maxStock, ENT_QUOTES, 'UTF-8') ?>">

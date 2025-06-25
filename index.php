@@ -24,22 +24,37 @@ if (isset($_GET['category'])) {
 <?php include 'navbar.php'; ?>
 <body>
 
-<!-- BANNER -->
-<div class="hero text-center">
-  <h1 class="display-4 fw-bold">DeFacto Fashion</h1>
-  <p class="lead text-muted">Latest styles for everyone</p>
-  <div class="mt-4">
-    <a href="products.php" class="btn btn-dark px-4 me-2">🛍️ Browse Products</a>
-    <a href="#" class="btn btn-outline-secondary px-4">Learn More</a>
+<!-- HERO SLIDER -->
+<div id="heroSlider" class="carousel slide" data-bs-ride="carousel">
+  <div class="carousel-inner">
+    <div class="carousel-item active">
+      <img src="uploads/A1.jpg" class="d-block w-100 hero-img" alt="Slide 1">
+    </div>
+    <div class="carousel-item">
+      <img src="uploads/A2.jpg" class="d-block w-100 hero-img" alt="Slide 2">
+    </div>
+    <div class="carousel-item">
+      <img src="uploads/A3.jpg" class="d-block w-100 hero-img" alt="Slide 3">
+    </div>
   </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#heroSlider" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Previous</span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#heroSlider" data-bs-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="visually-hidden">Next</span>
+  </button>
 </div>
 
 <!-- FILTER BUTTONS -->
-<div class="container text-center my-3">
-  <a href="index.php" class="btn btn-outline-secondary category-btn">All</a>
-  <a href="index.php?category=Men" class="btn btn-outline-dark category-btn">👔 Men</a>
-  <a href="index.php?category=Women" class="btn btn-outline-danger category-btn">👗 Women</a>
-  <a href="index.php?category=Kids" class="btn btn-outline-primary category-btn">🧒 Kids</a>
+<div class="container-fluid my-3">
+  <div class="d-flex overflow-auto gap-2 px-3">
+    <a href="index.php" class="btn btn-outline-secondary flex-shrink-0 category-btn">All</a>
+    <a href="index.php?category=Men" class="btn btn-outline-dark flex-shrink-0 category-btn">👔 Men</a>
+    <a href="index.php?category=Women" class="btn btn-outline-danger flex-shrink-0 category-btn">👗 Women</a>
+    <a href="index.php?category=Kids" class="btn btn-outline-primary flex-shrink-0 category-btn">🧒 Kids</a>
+  </div>
 </div>
 
 <!-- PRODUCTS GRID -->
@@ -62,8 +77,8 @@ if (isset($_GET['category'])) {
             $stock_data[$stock_row['size']] = $stock_row['quantity'];
         }
 
-        echo "<div class='col-md-4 mb-4'>";
-        echo "<div class='card h-100 shadow-sm'>";
+        echo "<div class='col-lg-3 col-md-4 col-sm-6 mb-4'>";
+        echo "<div class='card product-card h-100 shadow-sm'>";
         echo "<img src='uploads/$image' alt='$name' class='card-img-top product-img'>";
         echo "<div class='card-body d-flex flex-column'>";
         echo "<h5 class='card-title'>$name</h5>";

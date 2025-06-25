@@ -14,11 +14,13 @@ require_once 'session.php';
   <p class="lead text-muted">Explore our fashionable collection for all ages</p>
 </div>
 
-<div class="container text-center my-4">
-  <a href="products.php" class="btn category-btn me-2">All</a>
-  <a href="products.php?category=Men" class="btn category-btn me-2">👔 Men</a>
-  <a href="products.php?category=Women" class="btn category-btn me-2">👗 Women</a>
-  <a href="products.php?category=Kids" class="btn category-btn">🧒 Kids</a>
+<div class="container-fluid my-4">
+  <div class="d-flex overflow-auto gap-2 px-3">
+    <a href="products.php" class="btn category-btn flex-shrink-0">All</a>
+    <a href="products.php?category=Men" class="btn category-btn flex-shrink-0">👔 Men</a>
+    <a href="products.php?category=Women" class="btn category-btn flex-shrink-0">👗 Women</a>
+    <a href="products.php?category=Kids" class="btn category-btn flex-shrink-0">🧒 Kids</a>
+  </div>
 </div>
 
 <div class="container">
@@ -51,8 +53,8 @@ require_once 'session.php';
         $pimage = htmlspecialchars($row['image'], ENT_QUOTES, 'UTF-8');
         $pprice = htmlspecialchars($row['price'], ENT_QUOTES, 'UTF-8');
 
-        echo "<div class='col-md-4 mb-4'>";
-        echo "<div class='card shadow-sm border-0 h-100'>";
+        echo "<div class='col-lg-3 col-md-4 col-sm-6 mb-4'>";
+        echo "<div class='card product-card border-0 h-100'>";
         echo "<img src='uploads/{$pimage}' alt='{$pname}' class='card-img-top product-img'>";
         echo "<div class='card-body'>";
         echo "<h5 class='card-title text-success fw-bold'>{$pname}</h5>";

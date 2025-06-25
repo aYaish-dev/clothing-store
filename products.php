@@ -26,15 +26,22 @@ session_start();
     <?php
       $filter = "";
       if (isset($_GET['category'])) {
-          $cat = $_GET['category'];
-          $filter = "WHERE categories.name = '$cat'";
+          $cat = trim($_GET['category']);
+          $filter = "WHERE categories.name = ?";
+          $sql = "SELECT products.*, categories.name AS catname
+                  FROM products
+                  JOIN categories ON products.category_id = categories.id
+                  $filter";
+          $stmt = mysqli_prepare($conn, $sql);
+          mysqli_stmt_bind_param($stmt, "s", $cat);
+          mysqli_stmt_execute($stmt);
+          $result = mysqli_stmt_get_result($stmt);
+      } else {
+          $sql = "SELECT products.*, categories.name AS catname
+                  FROM products
+                  JOIN categories ON products.category_id = categories.id";
+          $result = mysqli_query($conn, $sql);
       }
-
-      $sql = "SELECT products.*, categories.name AS catname
-              FROM products
-              JOIN categories ON products.category_id = categories.id
-              $filter";
-      $result = mysqli_query($conn, $sql);
 
       while ($row = mysqli_fetch_assoc($result)) {
         $id = $row['id'];

@@ -8,9 +8,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    $query = "SELECT * FROM users WHERE username='$username' AND role='admin'";
-    $result = mysqli_query($conn, $query);
-
     if ($result && mysqli_num_rows($result) == 1) {
         $admin = mysqli_fetch_assoc($result);
         if (password_verify($password, $admin['password'])) {

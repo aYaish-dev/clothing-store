@@ -3,13 +3,19 @@ session_start();
 include 'db.php';
 
 $filter = "";
+$result = null;
 if (isset($_GET['category'])) {
-    $category = $_GET['category'];
-    $filter = "WHERE categories.name = '$category'";
+    $category = trim($_GET['category']);
+    $filter = "WHERE categories.name = ?";
+    $query = "SELECT products.*, categories.name AS catname FROM products JOIN categories ON products.category_id = categories.id $filter";
+    $stmt = mysqli_prepare($conn, $query);
+    mysqli_stmt_bind_param($stmt, "s", $category);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
+} else {
+    $query = "SELECT products.*, categories.name AS catname FROM products JOIN categories ON products.category_id = categories.id";
+    $result = mysqli_query($conn, $query);
 }
-
-$query = "SELECT products.*, categories.name AS catname FROM products JOIN categories ON products.category_id = categories.id $filter";
-$result = mysqli_query($conn, $query);
 ?>
 
 <!DOCTYPE html>

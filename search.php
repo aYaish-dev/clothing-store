@@ -1,14 +1,16 @@
 <?php
 include 'db.php';
 
-$searchTerm = $_GET['q'] ?? '';
+$searchTerm = trim($_GET['q'] ?? '');
+$like = "%{$searchTerm}%";
 
-$query = "SELECT products.*, categories.name AS category_name 
-          FROM products 
+$stmt = mysqli_prepare($conn, "SELECT products.*, categories.name AS category_name
+          FROM products
           LEFT JOIN categories ON products.category_id = categories.id
-          WHERE products.name LIKE '%$searchTerm%' OR products.description LIKE '%$searchTerm%'";
-
-$result = mysqli_query($conn, $query);
+          WHERE products.name LIKE ? OR products.description LIKE ?");
+mysqli_stmt_bind_param($stmt, "ss", $like, $like);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 ?>
 
 <!DOCTYPE html>

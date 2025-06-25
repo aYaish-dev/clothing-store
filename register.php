@@ -6,13 +6,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    if ($username === '' || strlen($username) > 50) {
-        $error = "Invalid username.";
-    } else {
-        $hashed = password_hash($password, PASSWORD_DEFAULT);
-        $check = mysqli_query($conn, "SELECT * FROM users WHERE username = '$username'");
-        if (mysqli_num_rows($check) > 0) {
-            $error = "Username already exists.";
         } else {
             $insert = mysqli_query($conn, "INSERT INTO users (username, password, role) VALUES ('$username', '$hashed', 'visitor')");
             if ($insert) {

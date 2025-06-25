@@ -7,3 +7,5 @@ uploads/
 
 # Ignore log files
 *.log
+# Local environment file
+.env

@@ -3,6 +3,7 @@ $servername = getenv('DB_HOST') ?: 'localhost';
 $username = getenv('DB_USER') ?: 'root';
 $password = getenv('DB_PASS') ?: ''; // خليه فاضي إذا ما حطيت باسورد للـ MySQL
 $dbname = getenv('DB_NAME') ?: 'clothing_store';
+$admin_email = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
 
 // إنشاء الاتصال
 $conn = mysqli_connect($servername, $username, $password, $dbname);

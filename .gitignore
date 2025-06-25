@@ -1,0 +1,9 @@
+# Ignore uploads directory
+uploads/
+
+# Ignore IDE-specific settings
+.vscode/
+.idea/
+
+# Ignore log files
+*.log

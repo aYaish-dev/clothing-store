@@ -71,8 +71,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // ✅ Use a transaction for order creation and stock updates
     mysqli_begin_transaction($conn);
 
-    $order_stmt = mysqli_prepare($conn, "INSERT INTO orders (user_id, username, phone, address, total, status) VALUES (?, ?, ?, ?, ?, 'pending')");
-    mysqli_stmt_bind_param($order_stmt, "isssd", $user_id, $fullname, $phone, $address, $total);
+   $order_stmt = mysqli_prepare($conn, "INSERT INTO orders (user_id, username, phone, address, total, status) VALUES (?, ?, ?, ?, ?, 'pending')");    mysqli_stmt_bind_param($order_stmt, "isssd", $user_id, $fullname, $phone, $address, $total);
 
     if (!mysqli_stmt_execute($order_stmt)) {
         mysqli_rollback($conn);
@@ -114,7 +113,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_commit($conn);
 
-    $message = "New order #$order_id placed by $fullname. Total: $$total";
+     $message = "New order #$order_id placed by $fullname. Total: $$total";
     @mail('abdallahyaish1@gmail.com', 'New Order', $message);
 
     unset($_SESSION['cart']);

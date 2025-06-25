@@ -18,4 +18,3 @@ if ($id && in_array($status, $allowed, true)) {
 
 header('Location: orders.php');
 exit();
-

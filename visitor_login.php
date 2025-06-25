@@ -3,7 +3,7 @@ session_start();
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
     $pass = $_POST['password'];
 
    $query = "SELECT * FROM users WHERE username='$username' AND role='visitor'";

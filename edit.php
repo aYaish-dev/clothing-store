@@ -22,9 +22,9 @@ $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
+    $name = trim($_POST['name']);
     $price = $_POST['price'];
-    $description = $_POST['description'];
+    $description = trim($_POST['description']);
     $category_id = $_POST['category_id'];
     $stock_xs = $_POST['stock_xs'];
     $stock_s = $_POST['stock_s'];
@@ -33,44 +33,58 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stock_xl = $_POST['stock_xl'];
     $stock_xxl = $_POST['stock_xxl'];
 
-    if (!empty($_FILES['image']['name'])) {
-        $image = $_FILES['image']['name'];
-        $target = "uploads/" . basename($image);
-        move_uploaded_file($_FILES['image']['tmp_name'], $target);
-
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    image='$image',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
+    if ($name === '' || !is_numeric($price) || $price < 0 || $price > 10000) {
+        $error = "❌ Invalid product details.";
     } else {
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
+        $quantities = [$stock_xs, $stock_s, $stock_m, $stock_l, $stock_xl, $stock_xxl];
+        foreach ($quantities as $q) {
+            if (!is_numeric($q) || $q < 0 || $q > 1000) {
+                $error = "❌ Invalid stock value.";
+                break;
+            }
+        }
     }
 
-    if (mysqli_query($conn, $update)) {
-        $success = "✅ Product updated successfully!";
-        $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
-    } else {
-        $error = "❌ Error updating product: " . mysqli_error($conn);
+    if (!$error) {
+        if (!empty($_FILES['image']['name'])) {
+            $image = $_FILES['image']['name'];
+            $target = "uploads/" . basename($image);
+            move_uploaded_file($_FILES['image']['tmp_name'], $target);
+
+            $update = "UPDATE products SET
+                        name='$name',
+                        price='$price',
+                        description='$description',
+                        category_id='$category_id',
+                        image='$image',
+                        stock_xs='$stock_xs',
+                        stock_s='$stock_s',
+                        stock_m='$stock_m',
+                        stock_l='$stock_l',
+                        stock_xl='$stock_xl',
+                        stock_xxl='$stock_xxl'
+                       WHERE id=$id";
+        } else {
+            $update = "UPDATE products SET
+                        name='$name',
+                        price='$price',
+                        description='$description',
+                        category_id='$category_id',
+                        stock_xs='$stock_xs',
+                        stock_s='$stock_s',
+                        stock_m='$stock_m',
+                        stock_l='$stock_l',
+                        stock_xl='$stock_xl',
+                        stock_xxl='$stock_xxl'
+                       WHERE id=$id";
+        }
+
+        if (mysqli_query($conn, $update)) {
+            $success = "✅ Product updated successfully!";
+            $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
+        } else {
+            $error = "❌ Error updating product: " . mysqli_error($conn);
+        }
     }
 }
 ?>

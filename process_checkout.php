@@ -3,9 +3,9 @@ session_start();
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = mysqli_real_escape_string($conn, $_POST['fullname']);
-    $phone = mysqli_real_escape_string($conn, $_POST['phone']);
-    $address = mysqli_real_escape_string($conn, $_POST['address']);
+    $username = mysqli_real_escape_string($conn, trim($_POST['fullname']));
+    $phone = mysqli_real_escape_string($conn, trim($_POST['phone']));
+    $address = mysqli_real_escape_string($conn, trim($_POST['address']));
 
     $cart = $_SESSION['cart'] ?? [];
 

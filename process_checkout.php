@@ -38,6 +38,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $cart = $_SESSION['cart'] ?? [];
     $user_id = $_SESSION['visitor']['id'] ?? 0;
+    $coupon = strtoupper(trim($_POST['coupon'] ?? ''));
+    $discountPercent = $coupon === 'SAVE10' ? 10 : 0;
 
     if (empty($cart)) {
         $_SESSION['message'] = "❌ Cart is empty.";
@@ -48,6 +50,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $total = 0;
     foreach ($cart as $item) {
         $total += $item['product']['price'] * $item['quantity'];
+    }
+    if ($discountPercent > 0) {
+        $total -= $total * ($discountPercent / 100);
     }
 
     // ✅ Check stock first

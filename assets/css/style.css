@@ -1,38 +1,38 @@
 :root {
-  --primary-color: #005662;
-  --secondary-color: #f26b3a;
+  --primary-color: #f26b3a;
+  --secondary-color: #005662;
   --light-color: #ffffff;
 }
 
 body {
-  font-family: 'Poppins', sans-serif;
-  background: linear-gradient(180deg, var(--light-color), #f0f4f7);
+  font-family: 'Inter', sans-serif;
+  background-color: #ffffff;
   min-height: 100vh;
   display: flex;
   flex-direction: column;
 }
 
 .navbar {
-  background: linear-gradient(to right, var(--primary-color), #007c8a);
+  background-color: #ffffff;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }
 
 .navbar-brand {
   font-weight: 700;
-  color: var(--light-color) !important;
+  color: #000 !important;
 }
 
 .navbar .nav-link {
-  color: var(--light-color) !important;
+  color: #000 !important;
 }
 
 .navbar .nav-link:hover {
-  color: var(--secondary-color) !important;
+  color: var(--primary-color) !important;
 }
 
-.hero {
-  background: linear-gradient(to bottom right, var(--primary-color), var(--secondary-color));
-  color: var(--light-color);
-  padding: 4rem 0;
+.hero-img {
+  height: 60vh;
+  object-fit: cover;
 }
 
 .product-card {
@@ -64,19 +64,18 @@ body {
 
 .category-btn {
   border-radius: 20px;
-  margin-right: 10px;
-  border-color: var(--secondary-color);
-  color: var(--secondary-color);
+  border-color: var(--primary-color);
+  color: var(--primary-color);
 }
 
 footer {
-  background: var(--primary-color);
-  color: var(--light-color);
-  border-top: none;
+  background: #f8f9fa;
+  color: #000;
+  border-top: 1px solid #e2e6ea;
 }
 
 footer a {
-  color: var(--secondary-color);
+  color: var(--primary-color);
 }
 
 footer a:hover {
@@ -105,3 +104,5 @@ footer a:hover {
 .size-btn[disabled]:hover {
   cursor: not-allowed;
 }
+
+.search-input{max-width:400px;}

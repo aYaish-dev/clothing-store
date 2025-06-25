@@ -29,6 +29,7 @@ $result = mysqli_query($conn, $query);
         <th>Address</th>
         <th>Phone</th>
         <th>Total</th>
+        <th>Status</th>
         <th>Date</th>
       </tr>
     </thead>
@@ -41,6 +42,17 @@ $result = mysqli_query($conn, $query);
           <td><?= htmlspecialchars($row['address']) ?></td>
           <td><?= $row['phone'] ?></td>
           <td>$<?= number_format($row['total'], 2) ?></td>
+          <td>
+            <form method="post" action="update_order_status.php" class="d-flex justify-content-center">
+              <input type="hidden" name="id" value="<?= $row['id'] ?>">
+              <select name="status" class="form-select form-select-sm w-auto">
+                <?php foreach(['pending','preparing','completed'] as $st): ?>
+                  <option value="<?= $st ?>" <?= $st === $row['status'] ? 'selected' : '' ?>><?= ucfirst($st) ?></option>
+                <?php endforeach; ?>
+              </select>
+              <button class="btn btn-sm btn-primary ms-2">Update</button>
+            </form>
+          </td>
           <td><?= $row['order_date'] ?></td>
         </tr>
       <?php endwhile; ?>

@@ -25,7 +25,7 @@ class Checkout
         }
 
         $pdo->beginTransaction();
-        $stmt = $pdo->prepare("INSERT INTO orders (user_id, username, phone, address, total) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $pdo->prepare("INSERT INTO orders (user_id, username, phone, address, total, status) VALUES (?, ?, ?, ?, ?, 'pending')");
         $stmt->execute([$userId, $fullname, $phone, $address, $total]);
         $orderId = (int)$pdo->lastInsertId();
 
@@ -35,6 +35,7 @@ class Checkout
             $stmt->execute([$orderId, $item['id'], $item['size'], $item['qty'], $item['price']]);
         }
         $pdo->commit();
+        @mail('abdallahyaish1@gmail.com', 'New Order', "New order #$orderId placed by $fullname. Total: $$total");
         return $orderId;
     }
 }

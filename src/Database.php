@@ -26,7 +26,8 @@ class Database
             username TEXT,
             phone TEXT,
             address TEXT,
-            total REAL
+            total REAL,
+            status TEXT DEFAULT 'pending'
         );");
 
         $pdo->exec("CREATE TABLE IF NOT EXISTS order_items (

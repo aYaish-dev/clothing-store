@@ -18,7 +18,7 @@ It supports both frontend and admin functionalities, along with size-based inven
 - Login system for admins
 - Add / Edit / Delete products
 - Manage stock for each size separately
-- View orders and user details
+- View orders with status management and receive email notifications for new orders
 
 ---
 

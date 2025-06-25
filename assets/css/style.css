@@ -21,3 +21,23 @@ body {
 footer {
   border-top: 1px solid #eee;
 }
+
+/* Disabled size buttons show an X overlay and cannot be selected */
+.size-btn[disabled] {
+  position: relative;
+}
+
+.size-btn[disabled]::after {
+  content: "X";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  color: #dc3545; /* Bootstrap danger color */
+  pointer-events: none;
+}
+
+.size-btn[disabled]:hover {
+  cursor: not-allowed;
+}

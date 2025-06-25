@@ -25,6 +25,9 @@ footer {
 /* Disabled size buttons show an X overlay and cannot be selected */
 .size-btn[disabled] {
   position: relative;
+  background-color: #f4f5f7;
+  color: #969696;
+  box-shadow: none;
 }
 
 .size-btn[disabled]::after {

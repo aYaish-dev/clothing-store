@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 // حماية الأدمن
@@ -16,10 +16,13 @@ $category_result = mysqli_query($conn, "SELECT * FROM categories");
 $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = trim($_POST['name']);
-    $price = (float)$_POST['price'];
-    $description = trim($_POST['description']);
-    $category_id = (int)$_POST['category_id'];
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = "Invalid CSRF token.";
+    } else {
+        $name = trim($_POST['name']);
+        $price = (float)$_POST['price'];
+        $description = trim($_POST['description']);
+        $category_id = (int)$_POST['category_id'];
 
     $allowedExts = ['jpg', 'jpeg', 'png'];
     $allowedTypes = ['image/jpeg', 'image/png'];
@@ -74,6 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="card p-4 shadow mx-auto" style="max-width: 600px;">
         <form action="add.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <div class="mb-3">
                 <label class="form-label">Product Name:</label>
                 <input type="text" name="name" class="form-control" required>

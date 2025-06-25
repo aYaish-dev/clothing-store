@@ -1,6 +1,6 @@
 <?php
 include 'db.php';
-session_start();
+require_once 'session.php';
 ?>
 
 <!DOCTYPE html>
@@ -67,6 +67,7 @@ session_start();
         }
 
         echo "<form action='add_to_cart.php' method='POST'>";
+        echo "<input type='hidden' name='csrf_token' value='" . $_SESSION['csrf_token'] . "'>";
         echo "<input type='hidden' name='product_id' value='" . htmlspecialchars($row['id'], ENT_QUOTES, 'UTF-8') . "'>";
         echo "<input type='hidden' name='size' id='selected-size-{$id}' required>";
         echo "<input type='hidden' name='quantity' value='1'>";

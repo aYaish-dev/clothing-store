@@ -1,8 +1,13 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $_SESSION['message'] = '❌ Invalid CSRF token.';
+        header('Location: cart.php');
+        exit();
+    }
     $id = (int) $_POST['product_id'];
     $size = trim($_POST['size']);
     $qty = max(1, (int) $_POST['quantity']); // والـ quantity رح توصل كـ hidden = 1

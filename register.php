@@ -1,10 +1,14 @@
 <?php
+require_once 'session.php';
 include 'db.php';
 $success = $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $error = "Invalid CSRF token.";
+    } else {
+        $username = trim($_POST['username']);
+        $password = $_POST['password'];
 
     if ($username === '' || $password === '') {
         $error = "Please fill in all fields.";
@@ -58,6 +62,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <form method="POST">
+            <input type="hidden" name="csrf_token" value="<?php echo $_SESSION['csrf_token']; ?>">
             <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
             <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
             <button type="submit" class="btn btn-success w-100">Register</button>

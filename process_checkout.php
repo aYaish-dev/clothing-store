@@ -1,8 +1,13 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
+        $_SESSION['message'] = '❌ Invalid CSRF token.';
+        header('Location: checkout.php');
+        exit();
+    }
     // Read user input
     $fullname = trim($_POST['fullname'] ?? '');
     $phone    = trim($_POST['phone'] ?? '');

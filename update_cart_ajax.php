@@ -1,9 +1,14 @@
 <?php
-session_start();
+require_once 'session.php';
 include 'db.php';
 
-if (!isset($_POST['key'], $_POST['quantity'])) {
+if (!isset($_POST['key'], $_POST['quantity'], $_POST['csrf_token'])) {
     echo json_encode(['success' => false, 'message' => 'Invalid request']);
+    exit;
+}
+$csrf = $_POST['csrf_token'];
+if ($csrf !== $_SESSION['csrf_token']) {
+    echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
     exit;
 }
 

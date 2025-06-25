@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once 'session.php';
 
 if (!isset($_SESSION['visitor'])) {
     header("Location: visitor_login.php");

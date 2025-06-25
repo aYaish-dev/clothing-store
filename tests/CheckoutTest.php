@@ -29,6 +29,8 @@ class CheckoutTest extends TestCase
         $this->assertSame(3, Database::getStock($this->pdo, $this->pid, 'L'));
         $stmt = $this->pdo->query("SELECT COUNT(*) FROM order_items WHERE order_id = $orderId");
         $this->assertSame(1, (int)$stmt->fetchColumn());
+        $status = $this->pdo->query("SELECT status FROM orders WHERE id = $orderId")->fetchColumn();
+        $this->assertSame('pending', $status);
     }
 
     public function testPlaceOrderInsufficientStock(): void

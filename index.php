@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 $filter = "";
 if (isset($_GET['category'])) {
@@ -64,6 +65,7 @@ $result = mysqli_query($conn, $query);
         echo "<p class='card-text text-muted'>\$ $price</p>";
 
         echo "<form action='add_to_cart.php' method='POST'>";
+        echo "<input type='hidden' name='token' value='" . get_csrf_token() . "'>";
         echo "<input type='hidden' name='product_id' value='$id'>";
         echo "<input type='hidden' name='size' id='selected-size-$id' required>";
         echo "<input type='hidden' name='quantity' value='1'>";

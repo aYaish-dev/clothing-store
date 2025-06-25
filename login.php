@@ -1,10 +1,14 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!verify_csrf_token($_POST['token'] ?? '')) {
+        die('Invalid CSRF token');
+    }
     $username = $_POST['username'];
     $password = $_POST['password'];
 
@@ -35,6 +39,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         <?php endif; ?>
 
         <form method="POST">
+            <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <input type="text" name="username" class="form-control mb-3" placeholder="Username" required>
             <input type="password" name="password" class="form-control mb-3" placeholder="Password" required>
             <button type="submit" class="btn btn-dark w-100">Login</button>

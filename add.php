@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 // حماية الأدمن
 if (!isset($_SESSION['admin'])) {
@@ -16,6 +17,9 @@ $category_result = mysqli_query($conn, "SELECT * FROM categories");
 $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    if (!verify_csrf_token($_POST['token'] ?? '')) {
+        die('Invalid CSRF token');
+    }
     $name = $_POST['name'];
     $price = $_POST['price'];
     $description = $_POST['description'];
@@ -65,6 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     <div class="card p-4 shadow mx-auto" style="max-width: 600px;">
         <form action="add.php" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <div class="mb-3">
                 <label class="form-label">Product Name:</label>
                 <input type="text" name="name" class="form-control" required>

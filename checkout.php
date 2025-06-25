@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 $cart = $_SESSION['cart'] ?? [];
 if (empty($cart)) {
@@ -61,6 +62,7 @@ if (empty($cart)) {
 
     <div class="card p-4 shadow mx-auto" style="max-width: 600px;">
         <form method="POST" action="process_checkout.php">
+            <input type="hidden" name="token" value="<?php echo get_csrf_token(); ?>">
             <div class="mb-3">
                 <label class="form-label">Full Name:</label>
                 <input type="text" name="fullname" class="form-control" required>

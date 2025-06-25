@@ -1,6 +1,7 @@
 <?php
 session_start();
 include 'db.php';
+include 'csrf.php';
 
 $cart = $_SESSION['cart'] ?? [];
 $total = 0;
@@ -85,6 +86,7 @@ $total = 0;
 
 <!-- ✅ JavaScript -->
 <script>
+const csrfToken = '<?php echo get_csrf_token(); ?>';
 document.querySelectorAll(".qty-btn").forEach(btn => {
   btn.addEventListener("click", () => {
     const action = btn.dataset.action;
@@ -108,7 +110,7 @@ document.querySelectorAll(".qty-btn").forEach(btn => {
     fetch("update_cart_ajax.php", {
       method: "POST",
       headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-      body: `key=${encodeURIComponent(key)}&quantity=${qty}`
+      body: `key=${encodeURIComponent(key)}&quantity=${qty}&token=${encodeURIComponent(csrfToken)}`
     })
     .then(res => res.json())
     .then(data => {

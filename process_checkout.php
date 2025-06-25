@@ -1,6 +1,7 @@
 <?php
 require_once 'session.php';
 include 'db.php';
+require_once 'vendor/autoload.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -113,8 +114,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     mysqli_commit($conn);
 
-     $message = "New order #$order_id placed by $fullname. Total: $$total";
-    @mail('abdallahyaish1@gmail.com', 'New Order', $message);
+    $message = "New order #$order_id placed by $fullname. Total: $$total";
+    $mailer = new \PHPMailer\PHPMailer\PHPMailer(true);
+    try {
+        $mailer->isSMTP();
+        $mailer->Host = 'smtp.gmail.com';
+        $mailer->SMTPAuth = true;
+        $mailer->Username = getenv('GMAIL_USER') ?: 'admin@example.com';
+        $mailer->Password = getenv('GMAIL_PASS') ?: '';
+        $mailer->SMTPSecure = \PHPMailer\PHPMailer\PHPMailer::ENCRYPTION_STARTTLS;
+        $mailer->Port = 587;
+        $mailer->setFrom('yourgmail@gmail.com');
+        $mailer->addAddress('abdallahyaish1@gmail.com');
+        $mailer->Subject = 'New Order';
+        $mailer->Body = $message;
+        $mailer->send();
+    } catch (\Exception $e) {
+        // ignore email errors
+    }
 
     unset($_SESSION['cart']);
     $_SESSION['message'] = "✅ Order placed successfully!";

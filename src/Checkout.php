@@ -2,6 +2,7 @@
 namespace Store;
 
 use PDO;
+use PHPMailer\PHPMailer\PHPMailer;
 
 class Checkout
 {
@@ -35,7 +36,23 @@ class Checkout
             $stmt->execute([$orderId, $item['id'], $item['size'], $item['qty'], $item['price']]);
         }
         $pdo->commit();
-        @mail('abdallahyaish1@gmail.com', 'New Order', "New order #$orderId placed by $fullname. Total: $$total");
+        $mailer = new PHPMailer(true);
+        try {
+            $mailer->isSMTP();
+            $mailer->Host = 'smtp.gmail.com';
+            $mailer->SMTPAuth = true;
+            $mailer->Username = getenv('GMAIL_USER') ?: 'admin@example.com';
+            $mailer->Password = getenv('GMAIL_PASS') ?: '';
+            $mailer->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+            $mailer->Port = 587;
+            $mailer->setFrom('yourgmail@gmail.com');
+            $mailer->addAddress('abdallahyaish1@gmail.com');
+            $mailer->Subject = 'New Order';
+            $mailer->Body = "New order #$orderId placed by $fullname. Total: $$total";
+            $mailer->send();
+        } catch (\Exception $e) {
+            // ignore email errors
+        }
         return $orderId;
     }
 }

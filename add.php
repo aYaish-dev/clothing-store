@@ -17,7 +17,9 @@ $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-
+    $price = (float)$_POST['price'];
+    $description = trim($_POST['description']);
+    $category_id = (int)$_POST['category_id'];
 
     $allowedExts = ['jpg', 'jpeg', 'png'];
     $allowedTypes = ['image/jpeg', 'image/png'];
@@ -32,12 +34,27 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     } elseif (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
         $error = "❌ Invalid image type.";
     } else {
-
+        $base = preg_replace('/[^A-Za-z0-9_-]/', '', pathinfo($imageFile['name'], PATHINFO_FILENAME));
+        $newName = $base . '_' . time() . '.' . $ext;
+        if (move_uploaded_file($imageFile['tmp_name'], __DIR__ . "/uploads/" . $newName)) {
+            $stmt = mysqli_prepare($conn, "INSERT INTO products (name, price, description, image, category_id) VALUES (?, ?, ?, ?, ?)");
+            mysqli_stmt_bind_param($stmt, "sdssi", $name, $price, $description, $newName, $category_id);
+            if (mysqli_stmt_execute($stmt)) {
+                $pid = mysqli_insert_id($conn);
+                foreach ($_POST['size_qty'] as $size => $qty) {
+                    $qty = (int)$qty;
+                    $size_stmt = mysqli_prepare($conn, "INSERT INTO product_sizes (product_id, size, quantity) VALUES (?, ?, ?)");
+                    mysqli_stmt_bind_param($size_stmt, "isi", $pid, $size, $qty);
+                    mysqli_stmt_execute($size_stmt);
+                }
+                $success = "✅ Product added successfully.";
+            } else {
+                $error = "❌ Failed to add product.";
             }
         } else {
             $error = "❌ Image upload failed.";
         }
-
+    }
 }
 ?>
 

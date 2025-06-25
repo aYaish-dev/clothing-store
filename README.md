@@ -18,7 +18,7 @@ It supports both frontend and admin functionalities, along with size-based inven
 - Login system for admins
 - Add / Edit / Delete products
 - Manage stock for each size separately
-- View orders with status management and receive email notifications for new orders
+- View orders with status management and receive email notifications for new orders via PHPMailer
 
 ---
 
@@ -48,6 +48,7 @@ It supports both frontend and admin functionalities, along with size-based inven
 3. Configure PHP:
    - `db.php` reads MySQL credentials from environment variables. Copy `.env.example` to `.env` and adjust the values of `DB_HOST`, `DB_USER`, `DB_PASS`, and `DB_NAME` as needed (defaults are `localhost`, `root`, an empty password, and `clothing_store`).
    - Set `ADMIN_EMAIL` to the address that should receive order notifications (defaults to `admin@example.com`).
+     Checkout emails are now sent using [PHPMailer](https://github.com/PHPMailer/PHPMailer).
    - Ensure the `mysqli` extension is enabled in `php.ini`.
    - Verify `file_uploads` is `On` and adjust `upload_max_filesize` if needed for product images.
 

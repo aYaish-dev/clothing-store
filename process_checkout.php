@@ -1,6 +1,8 @@
 <?php
 require_once 'session.php';
 include 'db.php';
+require_once __DIR__ . '/vendor/autoload.php';
+use PHPMailer\PHPMailer\PHPMailer;
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!isset($_POST['csrf_token']) || $_POST['csrf_token'] !== $_SESSION['csrf_token']) {
@@ -115,7 +117,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
      $message = "New order #$order_id placed by $fullname. Total: $$total";
     $adminEmail = getenv('ADMIN_EMAIL') ?: 'admin@example.com';
-    @mail($adminEmail, 'New Order', $message);
+    $mailer = new PHPMailer();
+    $mailer->setFrom('no-reply@localhost');
+    $mailer->addAddress($adminEmail);
+    $mailer->Subject = 'New Order';
+    $mailer->Body = $message;
+    @$mailer->send();
 
     unset($_SESSION['cart']);
     $_SESSION['message'] = "✅ Order placed successfully!";

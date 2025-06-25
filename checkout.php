@@ -16,6 +16,11 @@ if (empty($cart)) {
 <body class="bg-light">
 
 <div class="container py-5">
+    <?php if (isset($_SESSION['message'])): ?>
+        <div class="alert alert-warning text-center">
+            <?php echo htmlspecialchars($_SESSION['message'], ENT_QUOTES, 'UTF-8'); unset($_SESSION['message']); ?>
+        </div>
+    <?php endif; ?>
     <h2 class="text-center mb-4">🧾 Review Your Order</h2>
 
     <div class="table-responsive mb-4">
@@ -68,11 +73,11 @@ if (empty($cart)) {
             </div>
             <div class="mb-3">
                 <label class="form-label">Phone:</label>
-                <input type="text" name="phone" class="form-control" required>
+                <input type="text" name="phone" class="form-control" pattern="\+?[0-9\s\-]{7,20}" title="Phone number" required>
             </div>
             <div class="mb-3">
                 <label class="form-label">Address:</label>
-                <textarea name="address" class="form-control" rows="3" required></textarea>
+                <textarea name="address" class="form-control" rows="3" pattern="[\p{L}\d\s,.-]{5,200}" title="Address" required></textarea>
             </div>
             <div class="text-center">
                 <button type="submit" class="btn btn-success w-100">✅ Confirm Order</button>

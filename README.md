@@ -62,9 +62,17 @@ It supports both frontend and admin functionalities, along with size-based inven
    ```bash
    php -S localhost:8000
    ```
-   Then open `http://localhost:8000/index.php` in your browser.
+
+Then open `http://localhost:8000/index.php` in your browser.
 
 The main stylesheet is located at `assets/css/style.css` if you wish to tweak the look and feel.
+
+### Security Notes
+
+The application configures PHP sessions with secure parameters. Cookies are now
+set with the `Secure`, `HttpOnly`, and `SameSite=Strict` flags, and session
+identifiers are regenerated after a successful login. If you are deploying over
+HTTP during local development, the `Secure` flag will automatically be disabled.
 
 ## 🧪 Running Tests
 

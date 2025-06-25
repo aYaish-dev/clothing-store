@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         if ($result && mysqli_num_rows($result) == 1) {
             $admin = mysqli_fetch_assoc($result);
             if (password_verify($password, $admin['password'])) {
+                session_regenerate_id(true);
                 $_SESSION['admin'] = $username;
                 header("Location: admin.php");
                 exit();

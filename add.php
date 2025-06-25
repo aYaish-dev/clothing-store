@@ -17,45 +17,27 @@ $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $name = trim($_POST['name']);
-    $image = $_FILES['image']['name'];
-    $target = "uploads/" . basename($image);
 
-    if ($name === '' || !is_numeric($price) || $price < 0 || $price > 10000) {
-        $error = "❌ Invalid product details.";
+
+    $allowedExts = ['jpg', 'jpeg', 'png'];
+    $allowedTypes = ['image/jpeg', 'image/png'];
+    $maxSize = 2 * 1024 * 1024; // 2MB
+
+    $imageFile = $_FILES['image'];
+    $ext = strtolower(pathinfo($imageFile['name'], PATHINFO_EXTENSION));
+    $mime = mime_content_type($imageFile['tmp_name']);
+
+    if ($imageFile['size'] > $maxSize) {
+        $error = "❌ Image exceeds size limit.";
+    } elseif (!in_array($ext, $allowedExts) || !in_array($mime, $allowedTypes)) {
+        $error = "❌ Invalid image type.";
     } else {
-        foreach ($sizes as $size) {
-            $qty = $_POST['size_qty'][$size] ?? 0;
-            if (!is_numeric($qty) || $qty < 0 || $qty > 1000) {
-                $error = "❌ Invalid quantity for size $size.";
-                break;
+
             }
-        }
-    }
-
-    if (!$error && move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
-        // إدخال المنتج في جدول products
-        // إدخال المنتج في جدول products باستخدام prepared statements
-        $stmt = mysqli_prepare($conn, "INSERT INTO products (name, price, description, image, category_id) VALUES (?, ?, ?, ?, ?)");
-        mysqli_stmt_bind_param($stmt, "sdssi", $name, $price, $description, $image, $category_id);
-
-        if (mysqli_stmt_execute($stmt)) {
-            $product_id = mysqli_insert_id($conn); // الحصول على ID المنتج الجديد
-
-            // إدخال الكمية لكل مقاس في جدول product_sizes
-            foreach ($sizes as $size) {
-                $qty = (int)($_POST['size_qty'][$size] ?? 0);
-                $stmt = mysqli_prepare($conn, "INSERT INTO product_sizes (product_id, size, quantity) VALUES (?, ?, ?)");
-                mysqli_stmt_bind_param($stmt, "isi", $product_id, $size, $qty);
-                mysqli_stmt_execute($stmt);
-            }
-
-            $success = "✅ Product added successfully with sizes!";
         } else {
-            $error = "❌ Database error: " . mysqli_error($conn);
+            $error = "❌ Image upload failed.";
         }
-    } elseif (!$error) {
-        $error = "❌ Image upload failed.";
-    }
+
 }
 ?>
 
@@ -95,7 +77,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <select name="category_id" class="form-select" required>
                     <option value="" disabled selected>Choose category</option>
                     <?php while ($cat = mysqli_fetch_assoc($category_result)) { ?>
-                        <option value="<?php echo $cat['id']; ?>"><?php echo $cat['name']; ?></option>
+                        <option value="<?php echo htmlspecialchars($cat['id'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($cat['name'], ENT_QUOTES, 'UTF-8'); ?></option>
                     <?php } ?>
                 </select>
             </div>

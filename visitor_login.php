@@ -40,7 +40,7 @@ if (mysqli_num_rows($result) == 1) {
         <div class="col-md-5">
             <div class="card p-4">
                 <h3 class="text-center mb-4">🔑 Login</h3>
-                <?php if (isset($error)) echo "<div class='alert alert-danger'>$error</div>"; ?>
+                <?php if (isset($error)) echo "<div class='alert alert-danger'>" . htmlspecialchars($error, ENT_QUOTES, 'UTF-8') . "</div>"; ?>
                 <form method="POST">
                     <div class="mb-3">
                         <label>Username</label>

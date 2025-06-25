@@ -3,11 +3,13 @@ session_start();
 include 'db.php';
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $username = $_POST['username'];
+    $username = trim($_POST['username']);
     $pass = $_POST['password'];
 
-   $query = "SELECT * FROM users WHERE username='$username' AND role='visitor'";
-$result = mysqli_query($conn, $query);
+    $stmt = mysqli_prepare($conn, "SELECT * FROM users WHERE username=? AND role='visitor'");
+    mysqli_stmt_bind_param($stmt, "s", $username);
+    mysqli_stmt_execute($stmt);
+    $result = mysqli_stmt_get_result($stmt);
 
 if (mysqli_num_rows($result) == 1) {
     $visitor = mysqli_fetch_assoc($result);

@@ -10,11 +10,12 @@ if (!isset($_SESSION['admin'])) {
 
 // التحقق من وجود ID
 if (isset($_GET['id'])) {
-    $id = $_GET['id'];
+    $id = (int)$_GET['id'];
 
-    // حذف المنتج
-    $delete = "DELETE FROM products WHERE id = $id";
-    if (mysqli_query($conn, $delete)) {
+    // حذف المنتج باستخدام prepared statements
+    $stmt = mysqli_prepare($conn, "DELETE FROM products WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    if (mysqli_stmt_execute($stmt)) {
         header("Location: admin.php");
         exit();
     } else {

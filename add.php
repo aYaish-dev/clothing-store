@@ -16,19 +16,20 @@ $category_result = mysqli_query($conn, "SELECT * FROM categories");
 $sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $description = $_POST['description'];
-    $category_id = $_POST['category_id'];
+    $name = trim($_POST['name']);
+    $price = (float)$_POST['price'];
+    $description = trim($_POST['description']);
+    $category_id = (int)$_POST['category_id'];
     $image = $_FILES['image']['name'];
     $target = "uploads/" . basename($image);
 
     if (move_uploaded_file($_FILES['image']['tmp_name'], $target)) {
         // إدخال المنتج في جدول products
-        $sql = "INSERT INTO products (name, price, description, image, category_id)
-                VALUES ('$name', '$price', '$description', '$image', '$category_id')";
+        // إدخال المنتج في جدول products باستخدام prepared statements
+        $stmt = mysqli_prepare($conn, "INSERT INTO products (name, price, description, image, category_id) VALUES (?, ?, ?, ?, ?)");
+        mysqli_stmt_bind_param($stmt, "sdssi", $name, $price, $description, $image, $category_id);
 
-        if (mysqli_query($conn, $sql)) {
+        if (mysqli_stmt_execute($stmt)) {
             $product_id = mysqli_insert_id($conn); // الحصول على ID المنتج الجديد
 
             // إدخال الكمية لكل مقاس في جدول product_sizes

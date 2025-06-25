@@ -4,12 +4,15 @@ include 'db.php';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $id = (int) $_POST['product_id'];
-    $size = mysqli_real_escape_string($conn, $_POST['size']);
+    $size = trim($_POST['size']);
     $qty = max(1, (int) $_POST['quantity']); // والـ quantity رح توصل كـ hidden = 1
 
 
     // 1. Get product info
-    $product_result = mysqli_query($conn, "SELECT * FROM products WHERE id = $id");
+    $stmt = mysqli_prepare($conn, "SELECT * FROM products WHERE id = ?");
+    mysqli_stmt_bind_param($stmt, "i", $id);
+    mysqli_stmt_execute($stmt);
+    $product_result = mysqli_stmt_get_result($stmt);
     $product = mysqli_fetch_assoc($product_result);
 
     if (!$product) {
@@ -19,7 +22,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // 2. Get stock for selected size
-    $stock_result = mysqli_query($conn, "SELECT quantity FROM product_sizes WHERE product_id = $id AND size = '$size'");
+    $stock_stmt = mysqli_prepare($conn, "SELECT quantity FROM product_sizes WHERE product_id = ? AND size = ?");
+    mysqli_stmt_bind_param($stock_stmt, "is", $id, $size);
+    mysqli_stmt_execute($stock_stmt);
+    $stock_result = mysqli_stmt_get_result($stock_stmt);
     $stock_row = mysqli_fetch_assoc($stock_result);
     $stock = $stock_row['quantity'] ?? 0;
 

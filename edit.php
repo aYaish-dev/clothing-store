@@ -8,11 +8,13 @@ if (!isset($_SESSION['admin'])) {
     exit();
 }
 
-$id = $_GET['id'] ?? 0;
+$id = isset($_GET['id']) ? (int)$_GET['id'] : 0;
 
 // Get product data
-$query = "SELECT * FROM products WHERE id = $id";
-$result = mysqli_query($conn, $query);
+$stmt = mysqli_prepare($conn, "SELECT * FROM products WHERE id = ?");
+mysqli_stmt_bind_param($stmt, "i", $id);
+mysqli_stmt_execute($stmt);
+$result = mysqli_stmt_get_result($stmt);
 $product = mysqli_fetch_assoc($result);
 
 // Get categories
@@ -22,53 +24,33 @@ $success = "";
 $error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $name = $_POST['name'];
-    $price = $_POST['price'];
-    $description = $_POST['description'];
-    $category_id = $_POST['category_id'];
-    $stock_xs = $_POST['stock_xs'];
-    $stock_s = $_POST['stock_s'];
-    $stock_m = $_POST['stock_m'];
-    $stock_l = $_POST['stock_l'];
-    $stock_xl = $_POST['stock_xl'];
-    $stock_xxl = $_POST['stock_xxl'];
+    $name = trim($_POST['name']);
+    $price = (float)$_POST['price'];
+    $description = trim($_POST['description']);
+    $category_id = (int)$_POST['category_id'];
+    $stock_xs = (int)$_POST['stock_xs'];
+    $stock_s = (int)$_POST['stock_s'];
+    $stock_m = (int)$_POST['stock_m'];
+    $stock_l = (int)$_POST['stock_l'];
+    $stock_xl = (int)$_POST['stock_xl'];
+    $stock_xxl = (int)$_POST['stock_xxl'];
 
+    $image = $product['image'];
     if (!empty($_FILES['image']['name'])) {
         $image = $_FILES['image']['name'];
         $target = "uploads/" . basename($image);
         move_uploaded_file($_FILES['image']['tmp_name'], $target);
-
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    image='$image',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
-    } else {
-        $update = "UPDATE products SET 
-                    name='$name', 
-                    price='$price', 
-                    description='$description',
-                    category_id='$category_id',
-                    stock_xs='$stock_xs',
-                    stock_s='$stock_s',
-                    stock_m='$stock_m',
-                    stock_l='$stock_l',
-                    stock_xl='$stock_xl',
-                    stock_xxl='$stock_xxl'
-                   WHERE id=$id";
     }
 
-    if (mysqli_query($conn, $update)) {
+    $stmt = mysqli_prepare($conn, "UPDATE products SET name=?, price=?, description=?, category_id=?, image=?, stock_xs=?, stock_s=?, stock_m=?, stock_l=?, stock_xl=?, stock_xxl=? WHERE id=?");
+    mysqli_stmt_bind_param($stmt, "sdsisiiiiiii", $name, $price, $description, $category_id, $image, $stock_xs, $stock_s, $stock_m, $stock_l, $stock_xl, $stock_xxl, $id);
+
+    if (mysqli_stmt_execute($stmt)) {
         $success = "✅ Product updated successfully!";
-        $product = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM products WHERE id = $id"));
+        $stmt = mysqli_prepare($conn, "SELECT * FROM products WHERE id = ?");
+        mysqli_stmt_bind_param($stmt, "i", $id);
+        mysqli_stmt_execute($stmt);
+        $product = mysqli_fetch_assoc(mysqli_stmt_get_result($stmt));
     } else {
         $error = "❌ Error updating product: " . mysqli_error($conn);
     }

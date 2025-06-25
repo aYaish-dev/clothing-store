@@ -18,6 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $visitor = mysqli_fetch_assoc($result);
 
             if (password_verify($pass, $visitor['password'])) {
+                session_regenerate_id(true);
                 $_SESSION['visitor'] = [
                     'id' => $visitor['id'],
                     'name' => $visitor['username']
